@@ -1209,7 +1209,8 @@ const App = () => {
       const contextForAI = matches.map(m => 
         `${m.nazwa}: ${m.krotki_opis}`
       ).join('\n');
-      const genAI = new GoogleGenerativeAI('AIzaSyCKDdTqieEA9saWRKv2kGEely1aimQrxsg');
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       const prompt = `Jesteś asystentem obywatela w Polsce. Odpowiadaj TYLKO po polsku. Użytkownik pyta: "${query}"\n\nDostępne świadczenia w bazie danych:\n${contextForAI}\n\nOdpowiedz krótko i konkretnie (max 3-4 zdania):
       1. Które świadczenie/a pasują do pytania użytkownika
