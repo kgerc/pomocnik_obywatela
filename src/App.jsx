@@ -5,10 +5,10 @@ import MainApp from "./MainApp.jsx"; // przenieś tam kod swojej aplikacji
 
 export default function App() {
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/app" element={<MainApp />} />
+        <Route path="/pomocnik_obywatela" element={<LandingPage />} />
+        <Route path="/pomocnik_obywatela/app" element={<MainApp />} />
       </Routes>
     </Router>
   );
