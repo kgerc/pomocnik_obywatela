@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "npm run build && git add dist -f && git commit -m 'deploy' && git push origin main"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
