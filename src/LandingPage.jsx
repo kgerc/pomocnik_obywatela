@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, FileText, TrendingUp, Sparkles, Search, CheckCircle, ArrowRight, Users, Clock, Shield, Mail, X, Menu, ExternalLink, BarChart3 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
-const navigate = useNavigate();
 const LandingPage = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -224,7 +222,7 @@ const LandingPage = () => {
             <button
               onClick={() => {
                 handleCtaClick('nav');
-                navigate('/app');
+                window.location.href = '/app';
               }}
               style={{
                 background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
@@ -367,7 +365,7 @@ const LandingPage = () => {
             <button
               onClick={() => {
                 handleCtaClick('hero_start');
-                navigate('/app');
+                window.location.href = '/app';
               }}
               style={{
                 background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
@@ -765,7 +763,7 @@ const LandingPage = () => {
           <button
             onClick={() => {
               handleCtaClick('final');
-              navigate('/app');
+              window.location.href = '/app';
             }}
             style={{
               background: 'white',
