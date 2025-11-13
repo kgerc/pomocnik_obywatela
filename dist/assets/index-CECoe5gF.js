@@ -72,4 +72,4 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`}]})})).json()).con
         .spin {
           animation: spin 1s linear infinite;
         }
-      `})]})};function Qz(){return f.jsx(hg,{basename:"/pomocnik_obywatela/",children:f.jsxs(Km,{children:[f.jsx(mr,{path:"/pomocnik_obywatela",element:f.jsx(fz,{})}),f.jsx(mr,{path:"/pomocnik_obywatela/app",element:f.jsx(Zz,{})})]})})}tm.createRoot(document.getElementById("root")).render(f.jsx(E.StrictMode,{children:f.jsx(Qz,{})}));
+      `})]})};function Qz(){return f.jsx(hg,{basename:"/pomocnik_obywatela/",children:f.jsxs(Km,{children:[f.jsx(mr,{path:"/",element:f.jsx(fz,{})}),f.jsx(mr,{path:"/app",element:f.jsx(Zz,{})})]})})}tm.createRoot(document.getElementById("root")).render(f.jsx(E.StrictMode,{children:f.jsx(Qz,{})}));
