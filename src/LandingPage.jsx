@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, FileText, TrendingUp, Sparkles, Search, CheckCircle, ArrowRight, Users, Clock, Shield, Mail, X, Menu, ExternalLink, BarChart3 } from 'lucide-react';
+import { MessageSquare, FileText, TrendingUp, Sparkles, Search, CheckCircle, ArrowRight, Users, Clock, Shield, Mail, X, Menu, ExternalLink, BarChart3, Monitor, Smartphone, Zap } from 'lucide-react';
 
 const LandingPage = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [visibleSections, setVisibleSections] = useState(new Set());
   const [analytics, setAnalytics] = useState({
     pageViews: 0,
     clicks: {},
@@ -13,19 +14,35 @@ const LandingPage = () => {
     emailSignups: 0
   });
 
+  // Intersection Observer do animacji sekcji
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => new Set([...prev, entry.target.id]));
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
+    );
+
+    const sections = document.querySelectorAll('[data-animate]');
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
   // Analytics tracking
   useEffect(() => {
-    // Track page view
     trackEvent('page_view');
     
-    // Track time on page
     const startTime = Date.now();
     const interval = setInterval(() => {
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
       setAnalytics(prev => ({ ...prev, timeOnPage: timeSpent }));
     }, 1000);
 
-    // Show email modal after 30 seconds
     const modalTimer = setTimeout(() => {
       if (!isSubmitted && !localStorage.getItem('emailSubmitted')) {
         setShowEmailModal(true);
@@ -39,7 +56,6 @@ const LandingPage = () => {
     };
   }, []);
 
-  // Load analytics from localStorage
   useEffect(() => {
     const savedAnalytics = localStorage.getItem('analytics');
     if (savedAnalytics) {
@@ -47,7 +63,6 @@ const LandingPage = () => {
     }
   }, []);
 
-  // Save analytics to localStorage
   useEffect(() => {
     localStorage.setItem('analytics', JSON.stringify(analytics));
   }, [analytics]);
@@ -70,7 +85,6 @@ const LandingPage = () => {
       return newAnalytics;
     });
 
-    // Log to console for demonstration (in production, send to analytics service)
     console.log('📊 Analytics Event:', eventName, metadata, {
       timestamp: new Date().toISOString(),
       currentAnalytics: analytics
@@ -80,7 +94,6 @@ const LandingPage = () => {
   const handleEmailSubmit = (e) => {
     e.preventDefault();
     if (email) {
-      // Save to localStorage (in production, send to backend)
       const existingEmails = JSON.parse(localStorage.getItem('emailList') || '[]');
       existingEmails.push({
         email,
@@ -219,7 +232,6 @@ const LandingPage = () => {
             📋 Pomocnik Obywatela
           </div>
           
-          {/* Desktop Menu */}
           <div style={{
             display: 'flex',
             gap: '30px',
@@ -227,6 +239,7 @@ const LandingPage = () => {
             marginRight: '115px'
           }}>
             <a href="#funkcje" onClick={() => trackEvent('click_nav_funkcje')} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Funkcje</a>
+            <a href="#screenshots" onClick={() => trackEvent('click_nav_screenshots')} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Screenshots</a>
             <a href="#jak-dziala" onClick={() => trackEvent('click_nav_jakdziala')} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Jak działa</a>
             <a href="#faq" onClick={() => trackEvent('click_nav_faq')} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>FAQ</a>
           </div>
@@ -284,7 +297,6 @@ const LandingPage = () => {
             Asystent ze sztuczną inteligencją, który w sekundach znajdzie dla Ciebie odpowiednie świadczenia, dotacje i dokumenty. Bez skomplikowanych formularzy, bez biurokracji.
           </p>
 
-          {/* Email Signup Form */}
           {!isSubmitted ? (
             <form onSubmit={handleEmailSubmit} style={{
               display: 'flex',
@@ -350,7 +362,6 @@ const LandingPage = () => {
             </div>
           )}
 
-          {/* Trust Indicators */}
           <div style={{
             display: 'flex',
             gap: '30px',
@@ -378,12 +389,19 @@ const LandingPage = () => {
       </section>
 
       {/* Stats Section */}
-      <section style={{
-        padding: '60px 5%',
-        background: 'white',
-        width: '100%',
-        boxSizing: 'border-box'
-      }}>
+      <section 
+        id="stats-section"
+        data-animate
+        style={{
+          padding: '60px 5%',
+          background: 'white',
+          width: '100%',
+          boxSizing: 'border-box',
+          opacity: visibleSections.has('stats-section') ? 1 : 0,
+          transform: visibleSections.has('stats-section') ? 'translateY(0)' : 'translateY(30px)',
+          transition: 'opacity 0.8s ease-out, transform 0.8s ease-out'
+        }}
+      >
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -428,12 +446,19 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section id="funkcje" style={{
-        padding: '80px 5%',
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)',
-        width: '100%',
-        boxSizing: 'border-box'
-      }}>
+      <section 
+        id="funkcje"
+        data-animate
+        style={{
+          padding: '80px 5%',
+          background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)',
+          width: '100%',
+          boxSizing: 'border-box',
+          opacity: visibleSections.has('funkcje') ? 1 : 0,
+          transform: visibleSections.has('funkcje') ? 'translateY(0)' : 'translateY(30px)',
+          transition: 'opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s'
+        }}
+      >
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{
@@ -528,13 +553,311 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Screenshots Section */}
+      <section 
+        id="screenshots"
+        data-animate
+        style={{
+          padding: '80px 5%',
+          background: 'white',
+          width: '100%',
+          boxSizing: 'border-box',
+          opacity: visibleSections.has('screenshots') ? 1 : 0,
+          transform: visibleSections.has('screenshots') ? 'translateY(0)' : 'translateY(30px)',
+          transition: 'opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s'
+        }}
+      >
+        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <h2 style={{
+              fontSize: '42px',
+              fontWeight: '900',
+              color: '#2c3e50',
+              marginBottom: '15px'
+            }}>
+              Zobacz aplikację w akcji
+            </h2>
+            <p style={{
+              fontSize: '18px',
+              color: '#5a6c7d',
+              maxWidth: '600px',
+              margin: '0 auto'
+            }}>
+              Intuicyjny interfejs zaprojektowany z myślą o prostocie użytkowania
+            </p>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+            gap: '30px'
+          }}>
+            {/* Screenshot 1 - AI Chat */}
+            <div style={{
+              background: '#f8f9fb',
+              borderRadius: '16px',
+              padding: '20px',
+              border: '2px solid #e1e8ed',
+              overflow: 'hidden',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+            >
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '15px'
+              }}>
+                <MessageSquare size={24} color="#2c5aa0" />
+                <h3 style={{
+                  fontSize: '20px',
+                  fontWeight: '700',
+                  color: '#2c3e50',
+                  margin: 0
+                }}>
+                  AI Chat Assistant
+                </h3>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                borderRadius: '12px',
+                height: '300px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: '14px',
+                textAlign: 'center',
+                padding: '20px'
+              }}>
+                🖼️ Tu będzie screenshot<br/>
+                AI Chat w akcji
+              </div>
+              <p style={{
+                marginTop: '15px',
+                color: '#5a6c7d',
+                fontSize: '14px',
+                lineHeight: '1.6'
+              }}>
+                Zadaj pytanie w naturalnym języku, a AI natychmiast znajdzie odpowiednie świadczenia
+              </p>
+            </div>
+
+            {/* Screenshot 2 - Personalizacja */}
+            <div style={{
+              background: '#f8f9fb',
+              borderRadius: '16px',
+              padding: '20px',
+              border: '2px solid #e1e8ed',
+              overflow: 'hidden',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+            >
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '15px'
+              }}>
+                <Sparkles size={24} color="#10b981" />
+                <h3 style={{
+                  fontSize: '20px',
+                  fontWeight: '700',
+                  color: '#2c3e50',
+                  margin: 0
+                }}>
+                  Personalizacja
+                </h3>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                borderRadius: '12px',
+                height: '300px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: '14px',
+                textAlign: 'center',
+                padding: '20px'
+              }}>
+                🖼️ Tu będzie screenshot<br/>
+                Personalizacji profilu
+              </div>
+              <p style={{
+                marginTop: '15px',
+                color: '#5a6c7d',
+                fontSize: '14px',
+                lineHeight: '1.6'
+              }}>
+                Podaj swoje dane, a otrzymasz spersonalizowane rekomendacje świadczeń
+              </p>
+            </div>
+
+            {/* Screenshot 3 - Pisma i wnioski */}
+            <div style={{
+              background: '#f8f9fb',
+              borderRadius: '16px',
+              padding: '20px',
+              border: '2px solid #e1e8ed',
+              overflow: 'hidden',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+            >
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '15px'
+              }}>
+                <FileText size={24} color="#f59e0b" />
+                <h3 style={{
+                  fontSize: '20px',
+                  fontWeight: '700',
+                  color: '#2c3e50',
+                  margin: 0
+                }}>
+                  Baza dokumentów
+                </h3>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+                borderRadius: '12px',
+                height: '300px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: '14px',
+                textAlign: 'center',
+                padding: '20px'
+              }}>
+                🖼️ Tu będzie screenshot<br/>
+                Bazy pism i wniosków
+              </div>
+              <p style={{
+                marginTop: '15px',
+                color: '#5a6c7d',
+                fontSize: '14px',
+                lineHeight: '1.6'
+              }}>
+                Ponad 20 gotowych wzorów dokumentów do pobrania w jednym kliknięciu
+              </p>
+            </div>
+          </div>
+
+          {/* Mobile App Teaser */}
+          <div style={{
+            marginTop: '60px',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            borderRadius: '20px',
+            padding: '50px 30px',
+            textAlign: 'center',
+            color: 'white'
+          }}>
+            <Smartphone size={48} style={{ marginBottom: '20px' }} />
+            <h3 style={{
+              fontSize: '32px',
+              fontWeight: '800',
+              marginBottom: '15px'
+            }}>
+              Wkrótce aplikacja mobilna!
+            </h3>
+            <p style={{
+              fontSize: '18px',
+              opacity: 0.9,
+              marginBottom: '30px',
+              maxWidth: '600px',
+              margin: '0 auto 30px'
+            }}>
+              Pracujemy nad wersją mobilną, która będzie dostępna na iOS i Android. 
+              Zapisz się, aby otrzymać powiadomienie o premierze.
+            </p>
+            <div style={{
+              display: 'flex',
+              gap: '15px',
+              justifyContent: 'center',
+              flexWrap: 'wrap'
+            }}>
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.2)',
+                backdropFilter: 'blur(10px)',
+                padding: '15px 30px',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}>
+                <Zap size={24} />
+                <span style={{ fontWeight: '600' }}>Szybki dostęp</span>
+              </div>
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.2)',
+                backdropFilter: 'blur(10px)',
+                padding: '15px 30px',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}>
+                <Shield size={24} />
+                <span style={{ fontWeight: '600' }}>Bezpieczne</span>
+              </div>
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.2)',
+                backdropFilter: 'blur(10px)',
+                padding: '15px 30px',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}>
+                <Monitor size={24} />
+                <span style={{ fontWeight: '600' }}>Multi-platform</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* How It Works */}
-      <section id="jak-dziala" style={{
-        padding: '80px 5%',
-        background: 'white',
-        width: '100%',
-        boxSizing: 'border-box'
-      }}>
+      <section 
+        id="jak-dziala"
+        data-animate
+        style={{
+          padding: '80px 5%',
+          background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)',
+          width: '100%',
+          boxSizing: 'border-box',
+          opacity: visibleSections.has('jak-dziala') ? 1 : 0,
+          transform: visibleSections.has('jak-dziala') ? 'translateY(0)' : 'translateY(30px)',
+          transition: 'opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s'
+        }}
+      >
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{
@@ -623,12 +946,19 @@ const LandingPage = () => {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" style={{
-        padding: '80px 5%',
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)',
-        width: '100%',
-        boxSizing: 'border-box'
-      }}>
+      <section 
+        id="faq"
+        data-animate
+        style={{
+          padding: '80px 5%',
+          background: 'white',
+          width: '100%',
+          boxSizing: 'border-box',
+          opacity: visibleSections.has('faq') ? 1 : 0,
+          transform: visibleSections.has('faq') ? 'translateY(0)' : 'translateY(30px)',
+          transition: 'opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s'
+        }}
+      >
         <div style={{ maxWidth: '900px', margin: '0 auto', width: '100%' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{
@@ -651,7 +981,7 @@ const LandingPage = () => {
                 key={idx}
                 onClick={() => trackEvent(`click_faq_${idx}`)}
                 style={{
-                  background: 'white',
+                  background: '#f8f9fb',
                   padding: '30px',
                   borderRadius: '12px',
                   border: '2px solid #e1e8ed',
@@ -689,14 +1019,20 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section style={{
-        padding: '80px 5%',
-        background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
-        textAlign: 'center',
-        color: 'white',
-        width: '100%',
-        boxSizing: 'border-box'
-      }}>
+      <section 
+        data-animate
+        style={{
+          padding: '80px 5%',
+          background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
+          textAlign: 'center',
+          color: 'white',
+          width: '100%',
+          boxSizing: 'border-box',
+          opacity: visibleSections.has('faq') ? 1 : 0,
+          transform: visibleSections.has('faq') ? 'translateY(0)' : 'translateY(30px)',
+          transition: 'opacity 0.8s ease-out 0.4s, transform 0.8s ease-out 0.4s'
+        }}
+      >
         <div style={{ maxWidth: '900px', margin: '0 auto', width: '100%' }}>
           <h2 style={{
             fontSize: '42px',
@@ -811,6 +1147,7 @@ const LandingPage = () => {
               flexWrap: 'wrap'
             }}>
               <a href="#funkcje" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Funkcje</a>
+              <a href="#screenshots" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Screenshots</a>
               <a href="#jak-dziala" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Jak działa</a>
               <a href="#faq" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>FAQ</a>
               <a href="https://www.gov.pl" target="_blank" rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Gov.pl</a>
