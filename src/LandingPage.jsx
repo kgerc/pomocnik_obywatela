@@ -178,8 +178,13 @@ const LandingPage = () => {
   return (
     <div style={{
       minHeight: '100vh',
+      minWidth: '1900px',
+      width: '100%',
       background: '#ffffff',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      margin: 0,
+      padding: 0,
+      overflowX: 'hidden'
     }}>
       {/* Navigation */}
       <nav style={{
@@ -188,16 +193,19 @@ const LandingPage = () => {
         background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(10px)',
         borderBottom: '1px solid #e1e8ed',
-        padding: '15px 20px',
+        padding: '15px 5%',
         zIndex: 1000,
-        boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+        boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <div style={{
-          maxWidth: '1200px',
+          maxWidth: '1400px',
           margin: '0 auto',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          width: '100%'
         }}>
           <div style={{
             display: 'flex',
@@ -205,7 +213,8 @@ const LandingPage = () => {
             gap: '10px',
             fontSize: '24px',
             fontWeight: '800',
-            color: '#2c5aa0'
+            color: '#2c5aa0',
+            marginLeft: '100px'
           }}>
             📋 Pomocnik Obywatela
           </div>
@@ -214,29 +223,12 @@ const LandingPage = () => {
           <div style={{
             display: 'flex',
             gap: '30px',
-            alignItems: 'center'
+            alignItems: 'center',
+            marginRight: '115px'
           }}>
             <a href="#funkcje" onClick={() => trackEvent('click_nav_funkcje')} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Funkcje</a>
             <a href="#jak-dziala" onClick={() => trackEvent('click_nav_jakdziala')} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Jak działa</a>
             <a href="#faq" onClick={() => trackEvent('click_nav_faq')} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>FAQ</a>
-            <button
-              onClick={() => {
-                handleCtaClick('nav');
-                window.location.href = '/app';
-              }}
-              style={{
-                background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
-                color: 'white',
-                border: 'none',
-                padding: '10px 25px',
-                borderRadius: '8px',
-                fontWeight: '700',
-                cursor: 'pointer',
-                fontSize: '16px'
-              }}
-            >
-              Otwórz aplikację
-            </button>
           </div>
         </div>
       </nav>
@@ -244,10 +236,12 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section style={{
         background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)',
-        padding: '80px 20px',
-        textAlign: 'center'
+        padding: '80px 5%',
+        textAlign: 'center',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
           <div style={{
             display: 'inline-block',
             background: 'linear-gradient(135deg, #e8f4f8 0%, #d6ebf5 100%)',
@@ -259,7 +253,7 @@ const LandingPage = () => {
             marginBottom: '25px',
             border: '2px solid #2c5aa0'
           }}>
-            🚀 Powered by AI - Darmowe dla wszystkich
+            🚀 Asystent AI dla Obywateli
           </div>
           
           <h1 style={{
@@ -287,7 +281,7 @@ const LandingPage = () => {
             margin: '0 auto 40px',
             lineHeight: '1.6'
           }}>
-            AI-powered asystent, który w sekundach znajdzie dla Ciebie odpowiednie świadczenia, dotacje i dokumenty. Bez skomplikowanych formularzy, bez biurokracji.
+            Asystent ze sztuczną inteligencją, który w sekundach znajdzie dla Ciebie odpowiednie świadczenia, dotacje i dokumenty. Bez skomplikowanych formularzy, bez biurokracji.
           </p>
 
           {/* Email Signup Form */}
@@ -311,6 +305,7 @@ const LandingPage = () => {
                   minWidth: '250px',
                   padding: '15px 20px',
                   fontSize: '16px',
+                  background: 'rgba(255, 255, 255, 0.87)',
                   border: '2px solid #e1e8ed',
                   borderRadius: '8px',
                   outline: 'none'
@@ -355,60 +350,6 @@ const LandingPage = () => {
             </div>
           )}
 
-          <div style={{
-            display: 'flex',
-            gap: '15px',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            marginBottom: '40px'
-          }}>
-            <button
-              onClick={() => {
-                handleCtaClick('hero_start');
-                window.location.href = '/app';
-              }}
-              style={{
-                background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
-                color: 'white',
-                border: 'none',
-                padding: '18px 40px',
-                borderRadius: '12px',
-                fontSize: '18px',
-                fontWeight: '700',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                boxShadow: '0 10px 30px rgba(44, 90, 160, 0.3)'
-              }}
-            >
-              <Sparkles size={24} />
-              Rozpocznij za darmo
-            </button>
-            
-            <button
-              onClick={() => {
-                handleCtaClick('hero_demo');
-                document.getElementById('jak-dziala').scrollIntoView({ behavior: 'smooth' });
-              }}
-              style={{
-                background: 'white',
-                color: '#2c5aa0',
-                border: '2px solid #2c5aa0',
-                padding: '18px 40px',
-                borderRadius: '12px',
-                fontSize: '18px',
-                fontWeight: '700',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px'
-              }}
-            >
-              Zobacz jak działa
-            </button>
-          </div>
-
           {/* Trust Indicators */}
           <div style={{
             display: 'flex',
@@ -417,15 +358,16 @@ const LandingPage = () => {
             alignItems: 'center',
             flexWrap: 'wrap',
             color: '#5a6c7d',
-            fontSize: '14px'
+            fontSize: '14px',
+            marginTop: '40px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Shield size={20} color="#10b981" />
-              <span>100% bezpłatne</span>
+              <span>Oficjalne źródła</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <CheckCircle size={20} color="#10b981" />
-              <span>Oficjalne źródła</span>
+              <span>Aktualne przepisy</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Users size={20} color="#10b981" />
@@ -437,11 +379,13 @@ const LandingPage = () => {
 
       {/* Stats Section */}
       <section style={{
-        padding: '60px 20px',
-        background: 'white'
+        padding: '60px 5%',
+        background: 'white',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <div style={{
-          maxWidth: '1000px',
+          maxWidth: '1200px',
           margin: '0 auto',
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -485,10 +429,12 @@ const LandingPage = () => {
 
       {/* Features Section */}
       <section id="funkcje" style={{
-        padding: '80px 20px',
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)'
+        padding: '80px 5%',
+        background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{
               fontSize: '42px',
@@ -584,10 +530,12 @@ const LandingPage = () => {
 
       {/* How It Works */}
       <section id="jak-dziala" style={{
-        padding: '80px 20px',
-        background: 'white'
+        padding: '80px 5%',
+        background: 'white',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{
               fontSize: '42px',
@@ -676,10 +624,12 @@ const LandingPage = () => {
 
       {/* FAQ Section */}
       <section id="faq" style={{
-        padding: '80px 20px',
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)'
+        padding: '80px 5%',
+        background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', width: '100%' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{
               fontSize: '42px',
@@ -740,12 +690,14 @@ const LandingPage = () => {
 
       {/* CTA Section */}
       <section style={{
-        padding: '80px 20px',
+        padding: '80px 5%',
         background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
         textAlign: 'center',
-        color: 'white'
+        color: 'white',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', width: '100%' }}>
           <h2 style={{
             fontSize: '42px',
             fontWeight: '900',
@@ -758,30 +710,74 @@ const LandingPage = () => {
             marginBottom: '40px',
             opacity: 0.9
           }}>
-            Dołącz do tysięcy obywateli, którzy już korzystają z Pomocnika
+            Dołącz do listy i bądź na bieżąco z nowościami
           </p>
-          <button
-            onClick={() => {
-              handleCtaClick('final');
-              window.location.href = '/app';
-            }}
-            style={{
-              background: 'white',
-              color: '#2c5aa0',
-              border: 'none',
-              padding: '18px 50px',
-              borderRadius: '12px',
-              fontSize: '20px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              display: 'inline-flex',
+          
+          {!isSubmitted ? (
+            <form onSubmit={handleEmailSubmit} style={{
+              display: 'flex',
+              gap: '10px',
+              maxWidth: '500px',
+              margin: '0 auto',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}>
+              <input
+                type="email"
+                placeholder="Twój email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                style={{
+                  flex: '1',
+                  minWidth: '250px',
+                  padding: '15px 20px',
+                  fontSize: '16px',
+                  border: '2px solid white',
+                  background: 'rgba(255, 255, 255, 0.87)',
+                  borderRadius: '8px',
+                  outline: 'none'
+                }}
+              />
+              <button
+                type="submit"
+                onClick={() => handleCtaClick('final_email')}
+                style={{
+                  background: 'white',
+                  color: '#2c5aa0',
+                  border: 'none',
+                  padding: '15px 30px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+                }}
+              >
+                Zapisz się <ArrowRight size={20} />
+              </button>
+            </form>
+          ) : (
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.2)',
+              padding: '15px 30px',
+              borderRadius: '8px',
+              maxWidth: '500px',
+              margin: '0 auto',
+              display: 'flex',
               alignItems: 'center',
-              gap: '12px',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
-            }}
-          >
-            Otwórz aplikację bezpłatnie <ArrowRight size={24} />
-          </button>
+              justifyContent: 'center',
+              gap: '10px',
+              fontWeight: '600',
+              backdropFilter: 'blur(10px)'
+            }}>
+              <CheckCircle size={24} />
+              Dziękujemy za zapis!
+            </div>
+          )}
         </div>
       </section>
 
@@ -789,10 +785,12 @@ const LandingPage = () => {
       <footer style={{
         background: '#2c3e50',
         color: 'white',
-        padding: '40px 20px',
-        textAlign: 'center'
+        padding: '40px 5%',
+        textAlign: 'center',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -921,6 +919,7 @@ const LandingPage = () => {
                   padding: '15px 20px',
                   fontSize: '16px',
                   border: '2px solid #e1e8ed',
+                  background: 'rgba(255, 255, 255, 0.87)',
                   borderRadius: '8px',
                   outline: 'none'
                 }}
@@ -957,61 +956,6 @@ const LandingPage = () => {
               Nie wysyłamy spamu. Możesz zrezygnować w każdej chwili.
             </p>
           </div>
-        </div>
-      )}
-
-      {/* Analytics Dashboard (visible only in dev mode - remove in production) */}
-      {window.location.hostname === 'localhost' && (
-        <div style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          background: 'white',
-          padding: '15px',
-          borderRadius: '8px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-          fontSize: '12px',
-          maxWidth: '250px',
-          zIndex: 1000
-        }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            marginBottom: '10px',
-            fontWeight: '700',
-            color: '#2c5aa0'
-          }}>
-            <BarChart3 size={16} />
-            Analytics Dashboard
-          </div>
-          <div style={{ color: '#5a6c7d', lineHeight: '1.8' }}>
-            <div>👁️ Page views: {analytics.pageViews}</div>
-            <div>⏱️ Time on page: {analytics.timeOnPage}s</div>
-            <div>📧 Email signups: {analytics.emailSignups}</div>
-            <div>🖱️ Total clicks: {Object.values(analytics.clicks).reduce((a, b) => a + b, 0)}</div>
-          </div>
-          <button
-            onClick={() => {
-              const emails = JSON.parse(localStorage.getItem('emailList') || '[]');
-              console.log('📧 Collected emails:', emails);
-              console.log('📊 Full analytics:', analytics);
-              alert(`Emails collected: ${emails.length}\nCheck console for details`);
-            }}
-            style={{
-              marginTop: '10px',
-              width: '100%',
-              padding: '8px',
-              background: '#2c5aa0',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '11px'
-            }}
-          >
-            View Full Data
-          </button>
         </div>
       )}
     </div>
