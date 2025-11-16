@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, FileText, TrendingUp, Sparkles, Search, CheckCircle, ArrowRight, Users, Clock, Shield, Mail, X, Menu, ExternalLink, BarChart3, Monitor, Smartphone, Zap } from 'lucide-react';
+import { MessageSquare, FileText, TrendingUp, Sparkles, Search, CheckCircle, ArrowRight, Users, User, Database, Bell, Clock, Shield, Mail, X, Menu, ExternalLink, BarChart3, Monitor, Smartphone, Zap } from 'lucide-react';
 import aiChatImg from './assets/ai_chat.png';
 import aiPismaImg from './assets/ai_pisma.png';
 import aiDotacjeImg from './assets/ai_dotacje.png';
+import personalizacjaImg from './assets/personalizacja.png';
+import powiadomieniaImg from './assets/powiadomienia.png';
+import bazaDanychImg from './assets/baza_danych.png';
 
 const LandingPage = () => {
   const [email, setEmail] = useState('');
@@ -20,26 +23,50 @@ const LandingPage = () => {
 
   const screenshots = [
   {
-    title: 'AI Chat',
+    title: 'Znajdź świadczenia',
     icon: <MessageSquare size={24} color="#2c5aa0" />,
     img: aiChatImg,
-    description: 'Zadaj pytanie w naturalnym języku, a AI natychmiast znajdzie odpowiednie świadczenia',
+    description: 'Zadaj pytanie w naturalnym języku, a sztuczna inteligencja natychmiast znajdzie odpowiednie świadczenia',
     gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     height: '300px'
   },
   {
-    title: 'Baza pism i wniosków',
+    title: 'Znajdź pisma i wnioski',
     icon: <FileText size={24} color="#10b981" />,
     img: aiPismaImg,
-    description: 'Podaj swoje dane, a otrzymasz spersonalizowane rekomendacje świadczeń',
+    description: 'Zapytaj o dokumenty związane z Twoją sprawą, a sztuczna inteligencja natychmiast znajdzie odpowiednie pisma i wnioski',
     gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     height: '300px'
   },
   {
-    title: 'Dotacje',
+    title: 'Znajdź dotacje',
     icon: <TrendingUp size={24} color="#f59e0b" />,
     img: aiDotacjeImg,
-    description: 'Ponad 20 gotowych wzorów dokumentów do pobrania w jednym kliknięciu',
+    description: 'Wpisz temat którego dotyczy dofinansowanie, a sztuczna inteligencja natychmiast znajdzie odpowiednie dotacje',
+    gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+    height: '300px'
+  },
+  {
+    title: 'Personalizacja',
+    icon: <User size={24} color="#2c5aa0" />,
+    img: personalizacjaImg,
+    description: 'Podaj swoje dane, a otrzymasz spersonalizowane rekomendacje świadczeń',
+    gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+    height: '300px'
+  },
+    {
+    title: 'Baza pism i dotacji',
+    icon: <Database size={24} color="#10b981" />,
+    img: bazaDanychImg,
+    description: 'Wyszukaj gotowe wzory dokumentów do pobrania',
+    gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+    height: '300px'
+  },
+    {
+    title: 'Powiadomienia',
+    icon: <Bell size={24} color="#f59e0b" />,
+    img: powiadomieniaImg,
+    description: 'Otrzymuj powiadomienia o nowych programach publicznych',
     gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
     height: '300px'
   }
@@ -261,21 +288,21 @@ const LandingPage = () => {
       icon: <MessageSquare size={32} />,
       title: 'AI Chat - Inteligentny Asystent',
       description: 'Zapytaj o dowolne świadczenie w naturalnym języku. AI natychmiast znajdzie odpowiedź i pokaże Ci dostępne opcje.',
-      benefits: ['Odpowiedzi w sekundach', 'Język naturalny', 'Spersonalizowane wyniki'],
+      benefits: ['Odpowiedzi w sekundach', 'Zrozumiałe wyjaśnienia', 'Dokładne dopasowanie do Twojej sytuacji'],
       color: '#2c5aa0'
     },
     {
       icon: <FileText size={32} />,
       title: 'Baza Pism i Wniosków',
       description: 'Gotowe wzory dokumentów do pobrania. Reklamacje, odwołania, wnioski - wszystko w jednym miejscu.',
-      benefits: ['Ponad 20 wzorów', 'Gotowe do wypełnienia', 'Aktualne przepisy'],
+      benefits: ['Wyszukiwanie pism za pomocą AI', 'Gotowe wzory do pobrania (PDF/DOC)', 'Aktualne dokumenty zgodne z przepisami'],
       color: '#10b981'
     },
     {
       icon: <TrendingUp size={32} />,
       title: 'Dotacje i Granty 2024-2025',
       description: 'Aktywne programy dotacyjne dla firm, NGO, samorządów. Znajdź finansowanie na swój projekt.',
-      benefits: ['25+ programów', 'Filtry inteligentne', 'Terminy naborów'],
+      benefits: ['Aktualne kwoty wsparcia', 'Warunki kwalifikacji', 'Terminy naborów'],
       color: '#f59e0b'
     }
   ];
@@ -378,7 +405,7 @@ const LandingPage = () => {
             marginRight: '115px'
           }}>
             <a href="#funkcje" onClick={() => trackEvent('click_nav_funkcje', { category: 'navigation', label: 'funkcje' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Funkcje</a>
-            <a href="#screenshots" onClick={() => trackEvent('click_nav_screenshots', { category: 'navigation', label: 'screenshots' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Screenshots</a>
+            <a href="#screenshots" onClick={() => trackEvent('click_nav_screenshots', { category: 'navigation', label: 'screenshots' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Aplikacja</a>
             <a href="#jak-dziala" onClick={() => trackEvent('click_nav_jakdziala', { category: 'navigation', label: 'jak_dziala' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Jak działa</a>
             <a href="#faq" onClick={() => trackEvent('click_nav_faq', { category: 'navigation', label: 'faq' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>FAQ</a>
           </div>
@@ -527,74 +554,17 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* How It Works */}
       <section 
-        id="stats-section"
-        data-animate
-        style={{
-          padding: '60px 5%',
-          background: 'white',
-          width: '100%',
-          boxSizing: 'border-box',
-          opacity: visibleSections.has('stats-section') ? 1 : 0,
-          transform: visibleSections.has('stats-section') ? 'translateY(0)' : 'translateY(30px)',
-          transition: 'opacity 0.8s ease-out, transform 0.8s ease-out'
-        }}
-      >
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '30px'
-        }}>
-          {stats.map((stat, idx) => (
-            <div key={idx} style={{
-              textAlign: 'center',
-              padding: '30px',
-              background: '#f8f9fb',
-              borderRadius: '12px',
-              border: '2px solid #e1e8ed'
-            }}>
-              <div style={{
-                color: '#2c5aa0',
-                marginBottom: '15px',
-                display: 'flex',
-                justifyContent: 'center'
-              }}>
-                {stat.icon}
-              </div>
-              <div style={{
-                fontSize: '36px',
-                fontWeight: '900',
-                color: '#2c3e50',
-                marginBottom: '8px'
-              }}>
-                {stat.number}
-              </div>
-              <div style={{
-                fontSize: '16px',
-                color: '#5a6c7d',
-                fontWeight: '600'
-              }}>
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section 
-        id="funkcje"
+        id="jak-dziala"
         data-animate
         style={{
           padding: '80px 5%',
-          background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)',
+          background: 'white',
           width: '100%',
           boxSizing: 'border-box',
-          opacity: visibleSections.has('funkcje') ? 1 : 0,
-          transform: visibleSections.has('funkcje') ? 'translateY(0)' : 'translateY(30px)',
+          opacity: visibleSections.has('jak-dziala') ? 1 : 0,
+          transform: visibleSections.has('jak-dziala') ? 'translateY(0)' : 'translateY(30px)',
           transition: 'opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s'
         }}
       >
@@ -606,7 +576,7 @@ const LandingPage = () => {
               color: '#2c3e50',
               marginBottom: '15px'
             }}>
-              Wszystko czego potrzebujesz
+              Jak to działa?
             </h2>
             <p style={{
               fontSize: '18px',
@@ -614,87 +584,204 @@ const LandingPage = () => {
               maxWidth: '600px',
               margin: '0 auto'
             }}>
-              Kompleksowe narzędzie do zarządzania sprawami urzędowymi
+              Trzy proste kroki do uzyskania pomocy
             </p>
           </div>
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '30px'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '40px'
           }}>
-            {features.map((feature, idx) => (
-              <div
-                key={idx}
-                onClick={() => trackEvent(`click_feature_${idx}`, {
-                  category: 'features',
-                  label: feature.title,
-                  feature_name: feature.title
-                })}
-                style={{
-                  background: 'white',
-                  padding: '40px',
-                  borderRadius: '16px',
-                  border: '2px solid #e1e8ed',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer'
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)';
-                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)';
-                  e.currentTarget.style.borderColor = feature.color;
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.borderColor = '#e1e8ed';
-                }}
-              >
+            {howItWorks.map((step, idx) => (
+              <div key={idx} style={{
+                position: 'relative',
+                textAlign: 'center',
+                padding: '30px'
+              }}>
                 <div style={{
-                  color: feature.color,
-                  marginBottom: '20px'
+                  width: '80px',
+                  height: '80px',
+                  background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 20px',
+                  color: 'white',
+                  fontSize: '32px',
+                  fontWeight: '900'
                 }}>
-                  {feature.icon}
+                  {step.step}
+                </div>
+                <div style={{
+                  color: '#2c5aa0',
+                  marginBottom: '15px',
+                  display: 'flex',
+                  justifyContent: 'center'
+                }}>
+                  {step.icon}
                 </div>
                 <h3 style={{
                   fontSize: '24px',
                   fontWeight: '800',
                   color: '#2c3e50',
-                  marginBottom: '15px'
+                  marginBottom: '12px'
                 }}>
-                  {feature.title}
+                  {step.title}
                 </h3>
                 <p style={{
                   fontSize: '16px',
                   color: '#5a6c7d',
-                  lineHeight: '1.6',
-                  marginBottom: '20px'
+                  lineHeight: '1.6'
                 }}>
-                  {feature.description}
+                  {step.description}
                 </p>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '10px'
-                }}>
-                  {feature.benefits.map((benefit, bIdx) => (
-                    <div key={bIdx} style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      fontSize: '14px',
-                      color: '#5a6c7d'
-                    }}>
-                      <CheckCircle size={16} color={feature.color} />
-                      {benefit}
-                    </div>
-                  ))}
-                </div>
+                {idx < howItWorks.length - 1 && (
+                  <div style={{
+                    position: 'absolute',
+                    right: '-20px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: '#2c5aa0',
+                    display: window.innerWidth > 768 ? 'block' : 'none'
+                  }}>
+                    <ArrowRight size={32} />
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Features Section */}
+<section 
+  id="funkcje"
+  data-animate
+  style={{
+    padding: '80px 5%',
+    background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)',
+    width: '100%',
+    boxSizing: 'border-box',
+    opacity: visibleSections.has('funkcje') ? 1 : 0,
+    transform: visibleSections.has('funkcje') ? 'translateY(0)' : 'translateY(30px)',
+    transition: 'opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s'
+  }}
+>
+  <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+    <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+      <h2 style={{
+        fontSize: '42px',
+        fontWeight: '900',
+        color: '#2c3e50',
+        marginBottom: '15px'
+      }}>
+        Wszystko czego potrzebujesz
+      </h2>
+      <p style={{
+        fontSize: '18px',
+        color: '#5a6c7d',
+        maxWidth: '600px',
+        margin: '0 auto'
+      }}>
+        Kompleksowe narzędzie do zarządzania sprawami urzędowymi
+      </p>
+    </div>
+
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+      gap: '30px'
+    }}>
+      {features.map((feature, idx) => (
+        <div
+          key={idx}
+          onClick={() => trackEvent(`click_feature_${idx}`, {
+            category: 'features',
+            label: feature.title,
+            feature_name: feature.title
+          })}
+          style={{
+            background: 'white',
+            padding: '40px',
+            borderRadius: '16px',
+            border: '2px solid #e1e8ed',
+            transition: 'all 0.3s ease',
+            cursor: 'pointer',
+
+            /* >>> Najważniejsze — karta jako flex column <<< */
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-8px)';
+            e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)';
+            e.currentTarget.style.borderColor = feature.color;
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+            e.currentTarget.style.borderColor = '#e1e8ed';
+          }}
+        >
+
+          {/* GÓRA KAFELKA */}
+          <div>
+            <div style={{
+              color: feature.color,
+              marginBottom: '20px'
+            }}>
+              {feature.icon}
+            </div>
+
+            <h3 style={{
+              fontSize: '24px',
+              fontWeight: '800',
+              color: '#2c3e50',
+              marginBottom: '15px'
+            }}>
+              {feature.title}
+            </h3>
+
+            <p style={{
+              fontSize: '16px',
+              color: '#5a6c7d',
+              lineHeight: '1.6',
+              marginBottom: '25px'
+            }}>
+              {feature.description}
+            </p>
+          </div>
+
+          {/* BENEFITY — zawsze na dole */}
+          <div style={{
+            marginTop: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px'
+          }}>
+            {feature.benefits.map((benefit, bIdx) => (
+              <div key={bIdx} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '14px',
+                color: '#5a6c7d'
+              }}>
+                <CheckCircle size={16} color={feature.color} />
+                {benefit}
+              </div>
+            ))}
+          </div>
+
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
 
       {/* Screenshots Section */}
       <section 
@@ -819,114 +906,13 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section 
-        id="jak-dziala"
-        data-animate
-        style={{
-          padding: '80px 5%',
-          background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)',
-          width: '100%',
-          boxSizing: 'border-box',
-          opacity: visibleSections.has('jak-dziala') ? 1 : 0,
-          transform: visibleSections.has('jak-dziala') ? 'translateY(0)' : 'translateY(30px)',
-          transition: 'opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s'
-        }}
-      >
-        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <h2 style={{
-              fontSize: '42px',
-              fontWeight: '900',
-              color: '#2c3e50',
-              marginBottom: '15px'
-            }}>
-              Jak to działa?
-            </h2>
-            <p style={{
-              fontSize: '18px',
-              color: '#5a6c7d',
-              maxWidth: '600px',
-              margin: '0 auto'
-            }}>
-              Trzy proste kroki do uzyskania pomocy
-            </p>
-          </div>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '40px'
-          }}>
-            {howItWorks.map((step, idx) => (
-              <div key={idx} style={{
-                position: 'relative',
-                textAlign: 'center',
-                padding: '30px'
-              }}>
-                <div style={{
-                  width: '80px',
-                  height: '80px',
-                  background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 20px',
-                  color: 'white',
-                  fontSize: '32px',
-                  fontWeight: '900'
-                }}>
-                  {step.step}
-                </div>
-                <div style={{
-                  color: '#2c5aa0',
-                  marginBottom: '15px',
-                  display: 'flex',
-                  justifyContent: 'center'
-                }}>
-                  {step.icon}
-                </div>
-                <h3 style={{
-                  fontSize: '24px',
-                  fontWeight: '800',
-                  color: '#2c3e50',
-                  marginBottom: '12px'
-                }}>
-                  {step.title}
-                </h3>
-                <p style={{
-                  fontSize: '16px',
-                  color: '#5a6c7d',
-                  lineHeight: '1.6'
-                }}>
-                  {step.description}
-                </p>
-                {idx < howItWorks.length - 1 && (
-                  <div style={{
-                    position: 'absolute',
-                    right: '-20px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: '#2c5aa0',
-                    display: window.innerWidth > 768 ? 'block' : 'none'
-                  }}>
-                    <ArrowRight size={32} />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* FAQ Section */}
       <section 
         id="faq"
         data-animate
         style={{
           padding: '80px 5%',
-          background: 'white',
+          background: 'linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%)',
           width: '100%',
           boxSizing: 'border-box',
           opacity: visibleSections.has('faq') ? 1 : 0,

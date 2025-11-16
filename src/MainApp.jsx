@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, FileText, ExternalLink, Download, Loader, CheckCircle, AlertCircle, MessageSquare, Sparkles, Star, User, Bell, History, Trash2, Heart, Settings, Edit, Mail, TrendingUp, Building2, Briefcase } from 'lucide-react';
+import { Search, FileText, ExternalLink, Download, Loader, CheckCircle, AlertCircle, MessageSquare, Sparkles, Star, User, Bell, History, Trash2, Heart, Settings, Edit, Mail, TrendingUp, Building2, Briefcase, Database } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import  dotacjeDB from './dotacjeDb.js';
 import  pismaDB  from './pismaDb.js';
@@ -872,231 +872,232 @@ const MainApp = () => {
             </div>
           </div>
         </div>
+{/* Personalization Tab */}
+{activeTab === 'personalization' && (
+  <div style={{
+    background: 'white',
+    borderRadius: '16px',
+    padding: '30px',
+    marginBottom: '20px',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+  }}>
+    <h2 style={{
+      fontSize: '24px',
+      fontWeight: '700',
+      color: '#2c3e50',
+      marginBottom: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '10px'
+    }}>
+      <Settings size={24} color="#2c5aa0" />
+      Personalizacja - Powiedz nam o sobie
+    </h2>
+    <p style={{
+      color: '#5a6c7d',
+      marginBottom: '25px',
+      lineHeight: '1.6'
+    }}>
+      Podaj podstawowe informacje o swojej sytuacji, a pokażemy Ci świadczenia, które mogą Ci przysługiwać.
+    </p>
 
-        {/* Personalization Tab */}
-        {activeTab === 'personalization' && (
-          <div style={{
-            background: 'white',
-            borderRadius: '16px',
-            padding: '30px',
-            marginBottom: '20px',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
-          }}>
-            <h2 style={{
-              fontSize: '24px',
-              fontWeight: '700',
-              color: '#2c3e50',
-              marginBottom: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px'
-            }}>
-              <Settings size={24} color="#2c5aa0" />
-              Personalizacja - Powiedz nam o sobie
-            </h2>
-            <p style={{
-              color: '#5a6c7d',
-              marginBottom: '25px',
-              lineHeight: '1.6'
-            }}>
-              Podaj podstawowe informacje o swojej sytuacji, a pokażemy Ci świadczenia, które mogą Ci przysługiwać.
-            </p>
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)', // dwa inputy w jednej linii
+      gap: '25px', // odstęp między wszystkimi polami
+      marginBottom: '25px'
+    }}>
+      <div>
+        <label style={{
+          display: 'block',
+          fontWeight: '600',
+          color: '#2c3e50',
+          marginBottom: '8px'
+        }}>
+          Liczba dzieci:
+        </label>
+        <input
+          type="number"
+          min="0"
+          value={personalizationData.liczba_dzieci}
+          onChange={(e) => setPersonalizationData({
+            ...personalizationData,
+            liczba_dzieci: parseInt(e.target.value) || 0
+          })}
+          style={{
+            width: '100%',
+            padding: '12px',
+            border: '2px solid #e1e8ed',
+            background: 'rgba(255, 255, 255, 0.87)',
+            borderRadius: '8px',
+            fontSize: '16px',
+            boxSizing: 'border-box'
+          }}
+        />
+      </div>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '20px',
-              marginBottom: '25px'
-            }}>
-              <div>
-                <label style={{
-                  display: 'block',
-                  fontWeight: '600',
-                  color: '#2c3e50',
-                  marginBottom: '8px'
-                }}>
-                  Liczba dzieci:
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  value={personalizationData.liczba_dzieci}
-                  onChange={(e) => setPersonalizationData({
-                    ...personalizationData,
-                    liczba_dzieci: parseInt(e.target.value) || 0
-                  })}
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    border: '2px solid #e1e8ed',
-                    background: 'rgba(255, 255, 255, 0.87)',
-                    borderRadius: '8px',
-                    fontSize: '16px'
-                  }}
-                />
-              </div>
+      <div>
+        <label style={{
+          display: 'block',
+          fontWeight: '600',
+          color: '#2c3e50',
+          marginBottom: '8px'
+        }}>
+          Dochód na osobę (zł/miesiąc):
+        </label>
+        <input
+          type="number"
+          min="0"
+          value={personalizationData.dochod_na_osobe}
+          onChange={(e) => setPersonalizationData({
+            ...personalizationData,
+            dochod_na_osobe: parseInt(e.target.value) || 0
+          })}
+          style={{
+            width: '100%',
+            padding: '12px',
+            border: '2px solid #e1e8ed',
+            background: 'rgba(255, 255, 255, 0.87)',
+            borderRadius: '8px',
+            fontSize: '16px',
+            boxSizing: 'border-box'
+          }}
+        />
+      </div>
 
-              <div>
-                <label style={{
-                  display: 'block',
-                  fontWeight: '600',
-                  color: '#2c3e50',
-                  marginBottom: '8px'
-                }}>
-                  Dochód na osobę (zł/miesiąc):
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  value={personalizationData.dochod_na_osobe}
-                  onChange={(e) => setPersonalizationData({
-                    ...personalizationData,
-                    dochod_na_osobe: parseInt(e.target.value) || 0
-                  })}
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    border: '2px solid #e1e8ed',
-                    background: 'rgba(255, 255, 255, 0.87)',
-                    borderRadius: '8px',
-                    fontSize: '16px'
-                  }}
-                />
-              </div>
+      <div>
+        <label style={{
+          display: 'block',
+          fontWeight: '600',
+          color: '#2c3e50',
+          marginBottom: '8px'
+        }}>
+          Status zawodowy:
+        </label>
+        <select
+          value={personalizationData.status_zawodowy}
+          onChange={(e) => setPersonalizationData({
+            ...personalizationData,
+            status_zawodowy: e.target.value
+          })}
+          style={{
+            width: '100%',
+            padding: '12px',
+            border: '2px solid #e1e8ed',
+            background: 'rgba(255, 255, 255, 0.87)',
+            borderRadius: '8px',
+            fontSize: '16px'
+          }}
+        >
+          <option value="zatrudniony">Zatrudniony</option>
+          <option value="bezrobotny">Bezrobotny</option>
+          <option value="student">Student</option>
+          <option value="emeryt">Emeryt/Rencista</option>
+        </select>
+      </div>
 
-              <div>
-                <label style={{
-                  display: 'block',
-                  fontWeight: '600',
-                  color: '#2c3e50',
-                  marginBottom: '8px'
-                }}>
-                  Status zawodowy:
-                </label>
-                <select
-                  value={personalizationData.status_zawodowy}
-                  onChange={(e) => setPersonalizationData({
-                    ...personalizationData,
-                    status_zawodowy: e.target.value
-                  })}
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    border: '2px solid #e1e8ed',
-                    background: 'rgba(255, 255, 255, 0.87)',
-                    borderRadius: '8px',
-                    fontSize: '16px'
-                  }}
-                >
-                  <option value="zatrudniony">Zatrudniony</option>
-                  <option value="bezrobotny">Bezrobotny</option>
-                  <option value="student">Student</option>
-                  <option value="emeryt">Emeryt/Rencista</option>
-                </select>
-              </div>
+      <div>
+        <label style={{
+          display: 'block',
+          fontWeight: '600',
+          color: '#2c3e50',
+          marginBottom: '8px'
+        }}>
+          Mieszkanie:
+        </label>
+        <select
+          value={personalizationData.wlasnosc_mieszkania}
+          onChange={(e) => setPersonalizationData({
+            ...personalizationData,
+            wlasnosc_mieszkania: e.target.value
+          })}
+          style={{
+            width: '100%',
+            padding: '12px',
+            border: '2px solid #e1e8ed',
+            background: 'rgba(255, 255, 255, 0.87)',
+            borderRadius: '8px',
+            fontSize: '16px'
+          }}
+        >
+          <option value="wynajem">Wynajem</option>
+          <option value="wlasnosc">Własność</option>
+          <option value="spoldzielcze">Spółdzielcze</option>
+        </select>
+      </div>
+    </div>
 
-              <div>
-                <label style={{
-                  display: 'block',
-                  fontWeight: '600',
-                  color: '#2c3e50',
-                  marginBottom: '8px'
-                }}>
-                  Mieszkanie:
-                </label>
-                <select
-                  value={personalizationData.wlasnosc_mieszkania}
-                  onChange={(e) => setPersonalizationData({
-                    ...personalizationData,
-                    wlasnosc_mieszkania: e.target.value
-                  })}
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    border: '2px solid #e1e8ed',
-                    background: 'rgba(255, 255, 255, 0.87)',
-                    borderRadius: '8px',
-                    fontSize: '16px'
-                  }}
-                >
-                  <option value="wynajem">Wynajem</option>
-                  <option value="wlasnosc">Własność</option>
-                  <option value="spoldzielcze">Spółdzielcze</option>
-                </select>
-              </div>
-            </div>
+    {/* Checkbox */}
+    <div style={{
+      marginBottom: '25px'
+    }}>
+      <label style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        cursor: 'pointer',
+        fontWeight: '600',
+        color: '#2c3e50'
+      }}>
+        <input
+          type="checkbox"
+          checked={personalizationData.niepelnosprawnosc}
+          onChange={(e) => setPersonalizationData({
+            ...personalizationData,
+            niepelnosprawnosc: e.target.checked
+          })}
+          style={{
+            width: '20px',
+            height: '20px',
+            cursor: 'pointer'
+          }}
+        />
+        Niepełnosprawność (Ty lub członek rodziny)
+      </label>
+    </div>
 
-            <div style={{
-              marginBottom: '25px'
-            }}>
-              <label style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                cursor: 'pointer',
-                fontWeight: '600',
-                color: '#2c3e50'
-              }}>
-                <input
-                  type="checkbox"
-                  checked={personalizationData.niepelnosprawnosc}
-                  onChange={(e) => setPersonalizationData({
-                    ...personalizationData,
-                    niepelnosprawnosc: e.target.checked
-                  })}
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    cursor: 'pointer'
-                  }}
-                />
-                Niepełnosprawność (Ty lub członek rodziny)
-              </label>
-            </div>
+    {/* Personalized Recommendations */}
+    {getPersonalizedRecommendations().length > 0 ? (
+      <div style={{
+        background: 'linear-gradient(135deg, #e8f4f8 0%, #d6ebf5 100%)',
+        padding: '25px',
+        borderRadius: '12px',
+        border: '2px solid #2c5aa0'
+      }}>
+        <h3 style={{
+          fontSize: '20px',
+          fontWeight: '700',
+          color: '#2c3e50',
+          marginBottom: '15px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}>
+          <Sparkles size={24} color="#2c5aa0" />
+          Świadczenia dla Ciebie ({getPersonalizedRecommendations().length})
+        </h3>
+        <p style={{
+          color: '#5a6c7d',
+          marginBottom: '20px'
+        }}>
+          Na podstawie podanych informacji, mogą Ci przysługiwać następujące świadczenia:
+        </p>
+        {getPersonalizedRecommendations().map(sw => renderSwiadczenie(sw))}
+      </div>
+    ) : (
+      <div style={{
+        background: '#f8f9fb',
+        padding: '20px',
+        borderRadius: '12px',
+        textAlign: 'center',
+        color: '#5a6c7d'
+      }}>
+        Uzupełnij dane powyżej, aby zobaczyć spersonalizowane rekomendacje.
+      </div>
+    )}
+  </div>
+)}
 
-            {/* Personalized Recommendations */}
-            {getPersonalizedRecommendations().length > 0 && (
-              <div style={{
-                background: 'linear-gradient(135deg, #e8f4f8 0%, #d6ebf5 100%)',
-                padding: '25px',
-                borderRadius: '12px',
-                border: '2px solid #2c5aa0'
-              }}>
-                <h3 style={{
-                  fontSize: '20px',
-                  fontWeight: '700',
-                  color: '#2c3e50',
-                  marginBottom: '15px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px'
-                }}>
-                  <Sparkles size={24} color="#2c5aa0" />
-                  Świadczenia dla Ciebie ({getPersonalizedRecommendations().length})
-                </h3>
-                <p style={{
-                  color: '#5a6c7d',
-                  marginBottom: '20px'
-                }}>
-                  Na podstawie podanych informacji, mogą Ci przysługiwać następujące świadczenia:
-                </p>
-                {getPersonalizedRecommendations().map(sw => renderSwiadczenie(sw))}
-              </div>
-            )}
-
-            {getPersonalizedRecommendations().length === 0 && (
-              <div style={{
-                background: '#f8f9fb',
-                padding: '20px',
-                borderRadius: '12px',
-                textAlign: 'center',
-                color: '#5a6c7d'
-              }}>
-                Uzupełnij dane powyżej, aby zobaczyć spersonalizowane rekomendacje.
-              </div>
-            )}
-          </div>
-        )}
 
         {/* Favorites Tab */}
         {activeTab === 'favorites' && (
@@ -1323,7 +1324,7 @@ const MainApp = () => {
                   color: '#2c3e50',
                   margin: 0
                 }}>
-                  Aktualizacja przepisów - 01.03.2024
+                  Ostatni dzwonek na dotację gazową - nabór kończy się 17 listopada
                 </h3>
               </div>
               <p style={{
@@ -1331,7 +1332,7 @@ const MainApp = () => {
                 lineHeight: '1.6',
                 marginBottom: '10px'
               }}>
-                <strong>Program Czyste Powietrze</strong> - zwiększono wysokość dofinansowania dla gospodarstw o najniższych dochodach.
+                <strong>Program Czyste Powietrze 2025</strong> - To już ostatnie dni, by złożyć wniosek o dofinansowanie na kocioł gazowy w ramach programu Czyste Powietrze. Termin przedłużonego naboru upływa w poniedziałek 17 listopada 2025 r.
               </p>
               <a
                 href="https://www.gov.pl/web/nfosigw/czyste-powietrze"
@@ -1374,7 +1375,7 @@ const MainApp = () => {
                 lineHeight: '1.6',
                 marginBottom: '10px'
               }}>
-                <strong>Bon energetyczny</strong> - nowy program wsparcia dla gospodarstw domowych o niższych dochodach. Sprawdź, czy się kwalifikujesz!
+                <strong>Bon energetyczny 2025</strong> - nowy program wsparcia dla gospodarstw domowych o niższych dochodach. Sprawdź, czy się kwalifikujesz!
               </p>
               <button
                 onClick={() => {
