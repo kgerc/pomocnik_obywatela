@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, FileText, TrendingUp, Sparkles, Search, CheckCircle, ArrowRight, Users, Clock, Shield, Mail, X, Menu, ExternalLink, BarChart3, Monitor, Smartphone, Zap } from 'lucide-react';
+import aiChatImg from './assets/ai_chat.png';
+import aiPismaImg from './assets/ai_pisma.png';
+import aiDotacjeImg from './assets/ai_dotacje.png';
 
 const LandingPage = () => {
   const [email, setEmail] = useState('');
@@ -7,6 +10,7 @@ const LandingPage = () => {
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [visibleSections, setVisibleSections] = useState(new Set());
+  const [openImage, setOpenImage] = useState(null);
   const [analytics, setAnalytics] = useState({
     pageViews: 0,
     clicks: {},
@@ -14,32 +18,40 @@ const LandingPage = () => {
     emailSignups: 0
   });
 
-  // Google Analytics Initialization
+  const screenshots = [
+  {
+    title: 'AI Chat',
+    icon: <MessageSquare size={24} color="#2c5aa0" />,
+    img: aiChatImg,
+    description: 'Zadaj pytanie w naturalnym języku, a AI natychmiast znajdzie odpowiednie świadczenia',
+    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    height: '300px'
+  },
+  {
+    title: 'Baza pism i wniosków',
+    icon: <FileText size={24} color="#10b981" />,
+    img: aiPismaImg,
+    description: 'Podaj swoje dane, a otrzymasz spersonalizowane rekomendacje świadczeń',
+    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    height: '300px'
+  },
+  {
+    title: 'Dotacje',
+    icon: <TrendingUp size={24} color="#f59e0b" />,
+    img: aiDotacjeImg,
+    description: 'Ponad 20 gotowych wzorów dokumentów do pobrania w jednym kliknięciu',
+    gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+    height: '300px'
+  }
+];
+
+  // Zamknięcie modala po Esc
   useEffect(() => {
-    // Załaduj Google Analytics
-    const GA_MEASUREMENT_ID = 'G-47MBT63QHT'; // ZAMIEŃ NA SWOJE ID!
-    
-    const script1 = document.createElement('script');
-    script1.async = true;
-    script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-    document.head.appendChild(script1);
-
-    const script2 = document.createElement('script');
-    script2.innerHTML = `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '${GA_MEASUREMENT_ID}', {
-        page_title: 'Pomocnik Obywatela - Landing Page',
-        page_location: window.location.href
-      });
-    `;
-    document.head.appendChild(script2);
-
-    return () => {
-      document.head.removeChild(script1);
-      document.head.removeChild(script2);
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') setOpenImage(null);
     };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
   // Intersection Observer do animacji sekcji
@@ -49,6 +61,13 @@ const LandingPage = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setVisibleSections((prev) => new Set([...prev, entry.target.id]));
+            
+            // Track section view w GA4
+            trackEvent('section_view', {
+              category: 'engagement',
+              label: entry.target.id,
+              section_name: entry.target.id
+            });
           }
         });
       },
@@ -61,26 +80,83 @@ const LandingPage = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Track scroll depth
+  useEffect(() => {
+    let maxScroll = 0;
+    const trackedDepths = new Set();
+
+    const handleScroll = () => {
+      const scrollPercent = Math.round(
+        (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
+      );
+      
+      if (scrollPercent > maxScroll) {
+        maxScroll = scrollPercent;
+        
+        // Track milestones: 25%, 50%, 75%, 90%
+        [25, 50, 75, 90].forEach(milestone => {
+          if (scrollPercent >= milestone && !trackedDepths.has(milestone)) {
+            trackedDepths.add(milestone);
+            trackEvent('scroll_depth', {
+              category: 'engagement',
+              label: `${milestone}%`,
+              value: milestone
+            });
+          }
+        });
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Analytics tracking
   useEffect(() => {
-    trackEvent('page_view');
+    // Track page view
+    trackEvent('page_view', {
+      category: 'engagement',
+      label: 'landing_page_view'
+    });
     
+    // Track time on page
     const startTime = Date.now();
     const interval = setInterval(() => {
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
       setAnalytics(prev => ({ ...prev, timeOnPage: timeSpent }));
+      
+      // Track milestone времени
+      if (timeSpent === 30 || timeSpent === 60 || timeSpent === 120) {
+        trackEvent('time_on_page', {
+          category: 'engagement',
+          label: `${timeSpent}_seconds`,
+          value: timeSpent
+        });
+      }
     }, 1000);
 
+    // Show email modal after 30 seconds
     const modalTimer = setTimeout(() => {
       if (!isSubmitted && !localStorage.getItem('emailSubmitted')) {
         setShowEmailModal(true);
-        trackEvent('email_modal_shown');
+        trackEvent('email_modal_shown', {
+          category: 'engagement',
+          label: 'auto_popup_30s'
+        });
       }
     }, 30000);
 
     return () => {
       clearInterval(interval);
       clearTimeout(modalTimer);
+      
+      // Track session end
+      const finalTime = Math.floor((Date.now() - startTime) / 1000);
+      trackEvent('session_end', {
+        category: 'engagement',
+        label: 'page_exit',
+        value: finalTime
+      });
     };
   }, []);
 
@@ -173,7 +249,11 @@ const LandingPage = () => {
   };
 
   const handleCtaClick = (ctaName) => {
-    trackEvent(`click_cta_${ctaName}`);
+    trackEvent(`click_cta_${ctaName}`, {
+      category: 'cta',
+      label: ctaName,
+      value: 1
+    });
   };
 
   const features = [
@@ -297,10 +377,10 @@ const LandingPage = () => {
             alignItems: 'center',
             marginRight: '115px'
           }}>
-            <a href="#funkcje" onClick={() => trackEvent('click_nav_funkcje')} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Funkcje</a>
-            <a href="#screenshots" onClick={() => trackEvent('click_nav_screenshots')} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Screenshots</a>
-            <a href="#jak-dziala" onClick={() => trackEvent('click_nav_jakdziala')} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Jak działa</a>
-            <a href="#faq" onClick={() => trackEvent('click_nav_faq')} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>FAQ</a>
+            <a href="#funkcje" onClick={() => trackEvent('click_nav_funkcje', { category: 'navigation', label: 'funkcje' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Funkcje</a>
+            <a href="#screenshots" onClick={() => trackEvent('click_nav_screenshots', { category: 'navigation', label: 'screenshots' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Screenshots</a>
+            <a href="#jak-dziala" onClick={() => trackEvent('click_nav_jakdziala', { category: 'navigation', label: 'jak_dziala' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Jak działa</a>
+            <a href="#faq" onClick={() => trackEvent('click_nav_faq', { category: 'navigation', label: 'faq' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>FAQ</a>
           </div>
         </div>
       </nav>
@@ -546,7 +626,11 @@ const LandingPage = () => {
             {features.map((feature, idx) => (
               <div
                 key={idx}
-                onClick={() => trackEvent(`click_feature_${idx}`)}
+                onClick={() => trackEvent(`click_feature_${idx}`, {
+                  category: 'features',
+                  label: feature.title,
+                  feature_name: feature.title
+                })}
                 style={{
                   background: 'white',
                   padding: '40px',
@@ -646,260 +730,92 @@ const LandingPage = () => {
             </p>
           </div>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-            gap: '30px'
-          }}>
-            {/* Screenshot 1 - AI Chat */}
-            <div style={{
-              background: '#f8f9fb',
-              borderRadius: '16px',
-              padding: '20px',
-              border: '2px solid #e1e8ed',
-              overflow: 'hidden',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-5px)';
-              e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-            >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                marginBottom: '15px'
+        <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+                gap: '30px'
               }}>
-                <MessageSquare size={24} color="#2c5aa0" />
-                <h3 style={{
-                  fontSize: '20px',
-                  fontWeight: '700',
-                  color: '#2c3e50',
-                  margin: 0
-                }}>
-                  AI Chat Assistant
-                </h3>
-              </div>
-              <div style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                borderRadius: '12px',
-                height: '300px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                fontSize: '14px',
-                textAlign: 'center',
-                padding: '20px'
-              }}>
-                🖼️ Tu będzie screenshot<br/>
-                AI Chat w akcji
-              </div>
-              <p style={{
-                marginTop: '15px',
-                color: '#5a6c7d',
-                fontSize: '14px',
-                lineHeight: '1.6'
-              }}>
-                Zadaj pytanie w naturalnym języku, a AI natychmiast znajdzie odpowiednie świadczenia
-              </p>
-            </div>
+                {screenshots.map((s, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      background: '#f8f9fb',
+                      borderRadius: '16px',
+                      padding: '20px',
+                      border: '2px solid #e1e8ed',
+                      overflow: 'hidden',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer'
+                    }}
+                    onMouseOver={e => {
+                      e.currentTarget.style.transform = 'translateY(-5px)';
+                      e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+                    }}
+                    onMouseOut={e => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                  >
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      marginBottom: '15px'
+                    }}>
+                      {s.icon}
+                      <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', margin: 0 }}>
+                        {s.title}
+                      </h3>
+                    </div>
 
-            {/* Screenshot 2 - Personalizacja */}
-            <div style={{
-              background: '#f8f9fb',
-              borderRadius: '16px',
-              padding: '20px',
-              border: '2px solid #e1e8ed',
-              overflow: 'hidden',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-5px)';
-              e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-            >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                marginBottom: '15px'
-              }}>
-                <Sparkles size={24} color="#10b981" />
-                <h3 style={{
-                  fontSize: '20px',
-                  fontWeight: '700',
-                  color: '#2c3e50',
-                  margin: 0
-                }}>
-                  Personalizacja
-                </h3>
-              </div>
-              <div style={{
-                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                borderRadius: '12px',
-                height: '300px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                fontSize: '14px',
-                textAlign: 'center',
-                padding: '20px'
-              }}>
-                🖼️ Tu będzie screenshot<br/>
-                Personalizacji profilu
-              </div>
-              <p style={{
-                marginTop: '15px',
-                color: '#5a6c7d',
-                fontSize: '14px',
-                lineHeight: '1.6'
-              }}>
-                Podaj swoje dane, a otrzymasz spersonalizowane rekomendacje świadczeń
-              </p>
-            </div>
+                    <div style={{
+                      position: 'relative',
+                      background: s.gradient,
+                      borderRadius: '12px',
+                      height: s.height,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'white',
+                      fontSize: '14px',
+                      textAlign: 'center',
+                      overflow: 'hidden'
+                    }}>
+                      <img
+                        src={s.img}
+                        alt={s.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
+                      />
+                      {/* Ikona lupy */}
+                      <button
+                        onClick={() => setOpenImage(s.img)}
+                        style={{
+                          position: 'absolute',
+                          bottom: '12px',
+                          right: '12px',
+                          background: 'rgba(0,0,0,0.6)',
+                          border: 'none',
+                          borderRadius: '50%',
+                          padding: '10px',
+                          cursor: 'pointer',
+                          color: 'white',
+                          fontSize: '18px',
+                          transition: 'background 0.3s'
+                        }}
+                        onMouseOver={e => e.currentTarget.style.background = 'rgba(0,0,0,0.8)'}
+                        onMouseOut={e => e.currentTarget.style.background = 'rgba(0,0,0,0.6)'}
+                        title="Powiększ"
+                      >
+                        🔍
+                      </button>
+                    </div>
 
-            {/* Screenshot 3 - Pisma i wnioski */}
-            <div style={{
-              background: '#f8f9fb',
-              borderRadius: '16px',
-              padding: '20px',
-              border: '2px solid #e1e8ed',
-              overflow: 'hidden',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-5px)';
-              e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-            >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                marginBottom: '15px'
-              }}>
-                <FileText size={24} color="#f59e0b" />
-                <h3 style={{
-                  fontSize: '20px',
-                  fontWeight: '700',
-                  color: '#2c3e50',
-                  margin: 0
-                }}>
-                  Baza dokumentów
-                </h3>
+                    <p style={{ marginTop: '15px', color: '#5a6c7d', fontSize: '14px', lineHeight: '1.6' }}>
+                      {s.description}
+                    </p>
+                  </div>
+                ))}
               </div>
-              <div style={{
-                background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-                borderRadius: '12px',
-                height: '300px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                fontSize: '14px',
-                textAlign: 'center',
-                padding: '20px'
-              }}>
-                🖼️ Tu będzie screenshot<br/>
-                Bazy pism i wniosków
-              </div>
-              <p style={{
-                marginTop: '15px',
-                color: '#5a6c7d',
-                fontSize: '14px',
-                lineHeight: '1.6'
-              }}>
-                Ponad 20 gotowych wzorów dokumentów do pobrania w jednym kliknięciu
-              </p>
-            </div>
-          </div>
-
-          {/* Mobile App Teaser */}
-          <div style={{
-            marginTop: '60px',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            borderRadius: '20px',
-            padding: '50px 30px',
-            textAlign: 'center',
-            color: 'white'
-          }}>
-            <Smartphone size={48} style={{ marginBottom: '20px' }} />
-            <h3 style={{
-              fontSize: '32px',
-              fontWeight: '800',
-              marginBottom: '15px'
-            }}>
-              Wkrótce aplikacja mobilna!
-            </h3>
-            <p style={{
-              fontSize: '18px',
-              opacity: 0.9,
-              marginBottom: '30px',
-              maxWidth: '600px',
-              margin: '0 auto 30px'
-            }}>
-              Pracujemy nad wersją mobilną, która będzie dostępna na iOS i Android. 
-              Zapisz się, aby otrzymać powiadomienie o premierze.
-            </p>
-            <div style={{
-              display: 'flex',
-              gap: '15px',
-              justifyContent: 'center',
-              flexWrap: 'wrap'
-            }}>
-              <div style={{
-                background: 'rgba(255, 255, 255, 0.2)',
-                backdropFilter: 'blur(10px)',
-                padding: '15px 30px',
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px'
-              }}>
-                <Zap size={24} />
-                <span style={{ fontWeight: '600' }}>Szybki dostęp</span>
-              </div>
-              <div style={{
-                background: 'rgba(255, 255, 255, 0.2)',
-                backdropFilter: 'blur(10px)',
-                padding: '15px 30px',
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px'
-              }}>
-                <Shield size={24} />
-                <span style={{ fontWeight: '600' }}>Bezpieczne</span>
-              </div>
-              <div style={{
-                background: 'rgba(255, 255, 255, 0.2)',
-                backdropFilter: 'blur(10px)',
-                padding: '15px 30px',
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px'
-              }}>
-                <Monitor size={24} />
-                <span style={{ fontWeight: '600' }}>Multi-platform</span>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -1038,7 +954,11 @@ const LandingPage = () => {
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                onClick={() => trackEvent(`click_faq_${idx}`)}
+                onClick={() => trackEvent(`click_faq_${idx}`, {
+                  category: 'faq',
+                  label: faq.q,
+                  question: faq.q
+                })}
                 style={{
                   background: '#f8f9fb',
                   padding: '30px',
@@ -1258,7 +1178,10 @@ const LandingPage = () => {
             <button
               onClick={() => {
                 setShowEmailModal(false);
-                trackEvent('click_modal_close');
+                trackEvent('click_modal_close', {
+                  category: 'engagement',
+                  label: 'email_modal_dismissed'
+                });
               }}
               style={{
                 position: 'absolute',
@@ -1354,6 +1277,81 @@ const LandingPage = () => {
           </div>
         </div>
       )}
+
+      {/* Lightbox Modal */}
+      {openImage && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            cursor: 'pointer',
+            opacity: 1,
+            animation: 'fadeIn 0.3s ease'
+          }}
+          onClick={() => setOpenImage(null)}
+        >
+          {/* Przycisk zamykania */}
+          <button
+            onClick={() => setOpenImage(null)}
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              background: 'rgba(0,0,0,0.6)',
+              border: 'none',
+              borderRadius: '50%',
+              padding: '10px',
+              cursor: 'pointer',
+              color: 'white',
+              fontSize: '20px',
+              zIndex: 10001,
+              transition: 'background 0.3s'
+            }}
+            onMouseOver={e => e.currentTarget.style.background = 'rgba(0,0,0,0.8)'}
+            onMouseOut={e => e.currentTarget.style.background = 'rgba(0,0,0,0.6)'}
+            title="Zamknij"
+          >
+            <X size={20} />
+          </button>
+
+          <img
+            src={openImage}
+            alt="Enlarged"
+            style={{
+              maxWidth: '90%',
+              maxHeight: '90%',
+              borderRadius: '12px',
+              transform: 'scale(1)',
+              transition: 'transform 0.3s',
+              cursor: 'default',
+              animation: 'scaleIn 0.3s ease'
+            }}
+            onClick={e => e.stopPropagation()}
+          />
+        </div>
+      )}
+
+      {/* Animacje CSS */}
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          @keyframes scaleIn {
+            from { transform: scale(0.8); }
+            to { transform: scale(1); }
+          }
+        `}
+      </style>
     </div>
   );
 };

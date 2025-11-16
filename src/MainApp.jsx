@@ -295,42 +295,36 @@ const MainApp = () => {
         setPismaLoading(false);
         return;
       }
+      // Przygotowanie kontekstu z bazy
+      const contextForAI = matches.map(m => `${m.nazwa}: ${m.krotki_opis}`).join('\n');
 
-      const contextForAI = matches.map(m => 
-        `${m.nazwa}: ${m.opis}`
-      ).join('\n');
+      // Klucz API Gemini
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      const genAI = new GoogleGenerativeAI(apiKey);
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [
-            {
-              role: 'user',
-              content: `Jesteś asystentem prawnym w Polsce. Odpowiadaj TYLKO po polsku.
+      // Wybór modelu Gemini
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-Użytkownik szuka pisma/wniosku: "${pismaQuery}"
+      // Prompt przerobiony z Claude na Gemini
+      const prompt = `Jesteś asystentem prawnym w Polsce. Odpowiadaj TYLKO po polsku.
 
-Dostępne pisma w bazie danych:
-${contextForAI}
+      Użytkownik szuka pisma/wniosku: "${pismaQuery}"
 
-Odpowiedz krótko (2-3 zdania):
-1. Które pismo/pisma pasują do potrzeby użytkownika
-2. Co użytkownik znajdzie w tych dokumentach
-3. Zachęć do pobrania/sprawdzenia szczegółów poniżej
+      Dostępne pisma w bazie danych:
+      ${contextForAI}
 
-NIE podawaj linków ani nie wymyślaj pism spoza bazy.`
-            }
-          ]
-        })
-      });
+      Odpowiedz krótko (2-3 zdania):
+      1. Które pismo/pisma pasują do potrzeby użytkownika
+      2. Co użytkownik znajdzie w tych dokumentach
+      3. Zachęć do pobrania/sprawdzenia szczegółów poniżej
 
-      const data = await response.json();
-      const aiResponse = data.content[0].text;
+      NIE podawaj linków ani nie wymyślaj pism spoza bazy.`;
+
+      // Wywołanie modelu Gemini
+      const result = await model.generateContent(prompt);
+
+      // Pobranie odpowiedzi AI
+      const aiResponse = result.response.text();
 
       setPismaResult({
         content: aiResponse,
@@ -417,41 +411,37 @@ NIE podawaj linków ani nie wymyślaj pism spoza bazy.`
         return;
       }
 
+      // Przygotowanie kontekstu z bazy dotacji
       const contextForAI = matches.map(m => 
         `${m.nazwa} (${m.sektor}): ${m.opis}. Beneficjenci: ${m.beneficjenci.join(', ')}`
       ).join('\n');
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [
-            {
-              role: 'user',
-              content: `Jesteś ekspertem ds. funduszy i dotacji w Polsce. Odpowiadaj TYLKO po polsku.
+      // Klucz API Gemini
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      const genAI = new GoogleGenerativeAI(apiKey);
 
-Użytkownik szuka dotacji: "${dotacjeQuery}"
+      // Wybór modelu Gemini
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-Dostępne programy dotacyjne:
-${contextForAI}
+      const prompt = `Jesteś ekspertem ds. funduszy i dotacji w Polsce. Odpowiadaj TYLKO po polsku.
 
-Odpowiedz krótko (2-3 zdania):
-1. Który program/y pasują do potrzeby użytkownika
-2. Kto może się ubiegać i na co można otrzymać wsparcie
-3. Zachęć do sprawdzenia szczegółów poniżej
+      Użytkownik szuka dotacji: "${dotacjeQuery}"
 
-NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
-            }
-          ]
-        })
-      });
+      Dostępne programy dotacyjne:
+      ${contextForAI}
 
-      const data = await response.json();
-      const aiResponse = data.content[0].text;
+      Odpowiedz krótko (2-3 zdania):
+      1. Który program/y pasują do potrzeby użytkownika
+      2. Kto może się ubiegać i na co można otrzymać wsparcie
+      3. Zachęć do sprawdzenia szczegółów poniżej
+
+      NIE podawaj linków ani nie wymyślaj programów spoza bazy.`;
+
+      // Wywołanie modelu Gemini
+      const result = await model.generateContent(prompt);
+
+      // Pobranie odpowiedzi AI
+      const aiResponse = result.response.text();
 
       setDotacjeResult({
         content: aiResponse,
@@ -654,7 +644,8 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
               fontWeight: '600',
               fontSize: '14px',
               border: '2px solid #2c5aa0',
-              transition: 'transform 0.2s'
+              transition: 'transform 0.2s',
+              width: '225px'
             }}
             onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
             onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
@@ -938,6 +929,7 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
                     width: '100%',
                     padding: '12px',
                     border: '2px solid #e1e8ed',
+                    background: 'rgba(255, 255, 255, 0.87)',
                     borderRadius: '8px',
                     fontSize: '16px'
                   }}
@@ -965,6 +957,7 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
                     width: '100%',
                     padding: '12px',
                     border: '2px solid #e1e8ed',
+                    background: 'rgba(255, 255, 255, 0.87)',
                     borderRadius: '8px',
                     fontSize: '16px'
                   }}
@@ -990,6 +983,7 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
                     width: '100%',
                     padding: '12px',
                     border: '2px solid #e1e8ed',
+                    background: 'rgba(255, 255, 255, 0.87)',
                     borderRadius: '8px',
                     fontSize: '16px'
                   }}
@@ -1020,6 +1014,7 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
                     width: '100%',
                     padding: '12px',
                     border: '2px solid #e1e8ed',
+                    background: 'rgba(255, 255, 255, 0.87)',
                     borderRadius: '8px',
                     fontSize: '16px'
                   }}
@@ -1434,10 +1429,11 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
                     background: 'white',
                     padding: '10px 15px',
                     borderRadius: '8px',
+                    color: '#030712',
                     border: '2px solid #e1e8ed',
                     cursor: 'pointer'
                   }}>
-                    <input type="checkbox" style={{ cursor: 'pointer' }} />
+                    <input type="checkbox" style={{ cursor: 'pointer', accentColor: '#ffffff' }} />
                     <span style={{ fontSize: '14px', fontWeight: '600' }}>{cat}</span>
                   </label>
                 ))}
@@ -1507,10 +1503,12 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
                   padding: '15px',
                   fontSize: '16px',
                   border: '2px solid #2c5aa0',
+                  background: 'rgba(255, 255, 255, 0.87)',
                   borderRadius: '8px',
                   resize: 'vertical',
                   fontFamily: 'inherit',
-                  marginBottom: '15px'
+                  marginBottom: '15px',
+                  width: '850px',
                 }}
               />
               
@@ -1629,7 +1627,8 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
                                   borderRadius: '8px',
                                   textDecoration: 'none',
                                   fontWeight: '600',
-                                  fontSize: '14px'
+                                  fontSize: '14px',
+                                  width: '225px'
                                 }}
                               >
                                 <Download size={16} />
@@ -1797,7 +1796,8 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
                         textDecoration: 'none',
                         fontWeight: '600',
                         fontSize: '14px',
-                        width: '100%'
+                        width: '100%',
+                        width: '225px'
                       }}
                     >
                       <Download size={16} />
@@ -1821,7 +1821,8 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
                         fontWeight: '600',
                         fontSize: '14px',
                         border: '2px solid #2c5aa0',
-                        width: '100%'
+                        width: '100%',
+                        width: '225px'
                       }}
                     >
                       <ExternalLink size={16} />
@@ -1895,10 +1896,12 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
                   padding: '15px',
                   fontSize: '16px',
                   border: '2px solid #2c5aa0',
+                  background: 'rgba(255, 255, 255, 0.87)',
                   borderRadius: '8px',
                   resize: 'vertical',
                   fontFamily: 'inherit',
-                  marginBottom: '15px'
+                  marginBottom: '15px',
+                  width: '850px'
                 }}
               />
               
@@ -2433,10 +2436,12 @@ NIE podawaj linków ani nie wymyślaj programów spoza bazy.`
                   padding: '15px',
                   fontSize: '16px',
                   border: '2px solid #e1e8ed',
+                  background: 'rgba(255, 255, 255, 0.87)',
                   borderRadius: '12px',
                   resize: 'vertical',
                   fontFamily: 'inherit',
-                  marginBottom: '15px'
+                  marginBottom: '15px',
+                  width: '910px'
                 }}
               />
               

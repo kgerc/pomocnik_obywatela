@@ -241,7 +241,7 @@
   },
   {
     id: 'msp-zielona-transformacja',
-    nama: 'MSP - Zielona transformacja sektora MŚP',
+    nazwa: 'MSP - Zielona transformacja sektora MŚP',
     sektor: 'Zrównoważony rozwój',
     beneficjenci: ['MŚP'],
     kwota_max: '5 000 000 zł',
@@ -298,6 +298,18 @@
     link: 'https://www.parp.gov.pl/kobiety-biznes',
     status: 'aktywna',
     slowa_kluczowe: ['kobiety', 'przedsiębiorczość', 'biznes', 'startup', 'działalność']
+  },
+    {
+    id: 'naszeauto',
+    nazwa: 'NaszeAuto - Wsparcie dla elektromobilności',
+    sektor: 'Transport i ekologia',
+    beneficjenci: ['Osoby fizyczne', 'Przedsiębiorstwa'],
+    kwota_max: '40 000 zł',
+    opis: 'Dotacja na zakup samochodów elektrycznych.',
+    termin: 'Nabory w trybie ciągłym od 03.02.2025 do 30.04.2025',
+    link: 'https://www.naszeauto.gov.pl',
+    status: 'aktywna',
+    slowa_kluczowe: ['samochód elektryczny', 'elektromobilność', 'dotacja', 'hybryda', 'ładowarka']
   }
 ];
 
