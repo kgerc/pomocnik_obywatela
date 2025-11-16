@@ -178,7 +178,7 @@ const LandingPage = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      minWidth: '1900px',
+      minWidth: '100%',
       width: '100%',
       background: '#ffffff',
       fontFamily: 'system-ui, -apple-system, sans-serif',
