@@ -14,6 +14,34 @@ const LandingPage = () => {
     emailSignups: 0
   });
 
+  // Google Analytics Initialization
+  useEffect(() => {
+    // Załaduj Google Analytics
+    const GA_MEASUREMENT_ID = 'G-47MBT63QHT'; // ZAMIEŃ NA SWOJE ID!
+    
+    const script1 = document.createElement('script');
+    script1.async = true;
+    script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    document.head.appendChild(script1);
+
+    const script2 = document.createElement('script');
+    script2.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${GA_MEASUREMENT_ID}', {
+        page_title: 'Pomocnik Obywatela - Landing Page',
+        page_location: window.location.href
+      });
+    `;
+    document.head.appendChild(script2);
+
+    return () => {
+      document.head.removeChild(script1);
+      document.head.removeChild(script2);
+    };
+  }, []);
+
   // Intersection Observer do animacji sekcji
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -68,6 +96,7 @@ const LandingPage = () => {
   }, [analytics]);
 
   const trackEvent = (eventName, metadata = {}) => {
+    // Zapisz lokalnie
     setAnalytics(prev => {
       const newAnalytics = { ...prev };
       
@@ -85,23 +114,52 @@ const LandingPage = () => {
       return newAnalytics;
     });
 
+    // Wyślij do Google Analytics (jeśli zainstalowany)
+    if (typeof window.gtag !== 'undefined') {
+      window.gtag('event', eventName, {
+        ...metadata,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Log do konsoli (development)
     console.log('📊 Analytics Event:', eventName, metadata, {
       timestamp: new Date().toISOString(),
       currentAnalytics: analytics
     });
   };
 
-  const handleEmailSubmit = (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
     if (email) {
-      const existingEmails = JSON.parse(localStorage.getItem('emailList') || '[]');
-      existingEmails.push({
+      const emailData = {
         email,
         timestamp: new Date().toISOString(),
-        source: showEmailModal ? 'modal' : 'hero'
-      });
+        source: showEmailModal ? 'modal' : 'hero',
+        userAgent: navigator.userAgent,
+        page: window.location.href
+      };
+
+      // Zapisz lokalnie (dla użytkownika)
+      const existingEmails = JSON.parse(localStorage.getItem('emailList') || '[]');
+      existingEmails.push(emailData);
       localStorage.setItem('emailList', JSON.stringify(existingEmails));
       localStorage.setItem('emailSubmitted', 'true');
+      
+      // Wyślij do Google Sheets (dla Ciebie)
+      try {
+        await fetch('TU_WKLEJ_URL_Z_GOOGLE_APPS_SCRIPT', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(emailData)
+        });
+        console.log('✅ Email zapisany w Google Sheets');
+      } catch (error) {
+        console.error('❌ Błąd zapisu do Google Sheets:', error);
+      }
       
       setIsSubmitted(true);
       setShowEmailModal(false);
@@ -109,6 +167,7 @@ const LandingPage = () => {
       
       setTimeout(() => {
         setIsSubmitted(false);
+        setEmail('');
       }, 3000);
     }
   };
