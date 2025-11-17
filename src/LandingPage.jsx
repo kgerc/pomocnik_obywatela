@@ -325,15 +325,15 @@ const LandingPage = () => {
   const faqs = [
     {
       q: 'Czy korzystanie z Pomocnika Obywatela jest darmowe?',
-      a: 'Tak, podstawowe funkcje są całkowicie bezpłatne. Chcemy, aby każdy obywatel miał dostęp do rzetelnych informacji o świadczeniach.'
+      a: 'Tak — dostęp do bazy oficjalnych pism, wniosków i instrukcji jest całkowicie bezpłatny. Użytkownik może przeglądać dokumenty oraz podstawowe informacje bez żadnych opłat. Funkcje premium, takie jak inteligentne rekomendacje świadczeń i dotacji oraz personalizowane powiadomienia, wymagają opłaty.'
     },
     {
       q: 'Czy informacje są aktualne?',
-      a: 'Regularnie aktualizujemy bazę danych, śledząc zmiany w przepisach. Ostatnia aktualizacja: marzec 2024.'
+      a: 'Regularnie aktualizujemy bazę danych, śledząc zmiany w przepisach.'
     },
     {
       q: 'Czy mogę zaufać informacjom od AI?',
-      a: 'AI korzysta wyłącznie z oficjalnych źródeł (gov.pl, ZUS, PFRON). Zawsze linkujemy do źródeł, abyś mógł zweryfikować informacje.'
+      a: 'AI korzysta wyłącznie z oficjalnych źródeł (gov.pl, ZUS, PARP, itd.). Zawsze linkujemy do źródeł, abyś mógł zweryfikować informacje.'
     },
     {
       q: 'Czy moje dane są bezpieczne?',
@@ -1099,7 +1099,7 @@ const LandingPage = () => {
               flexWrap: 'wrap'
             }}>
               <a href="#funkcje" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Funkcje</a>
-              <a href="#screenshots" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Screenshots</a>
+              <a href="#screenshots" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Aplikacja</a>
               <a href="#jak-dziala" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Jak działa</a>
               <a href="#faq" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>FAQ</a>
               <a href="https://www.gov.pl" target="_blank" rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Gov.pl</a>
@@ -1112,10 +1112,7 @@ const LandingPage = () => {
             opacity: 0.7
           }}>
             <p style={{ margin: '10px 0' }}>
-              © 2024 Pomocnik Obywatela. Projekt edukacyjny powered by AI.
-            </p>
-            <p style={{ margin: '10px 0' }}>
-              Źródła informacji: Gov.pl, ZUS, PFRON, NFOŚiGW
+              © 2025 Pomocnik Obywatela.
             </p>
             <p style={{ margin: '10px 0', fontSize: '12px' }}>
               Zawsze weryfikuj informacje na oficjalnych stronach instytucji. To narzędzie nie zastępuje profesjonalnej porady prawnej.
