@@ -136,7 +136,6 @@ const MainApp = () => {
       3. Zachęć do sprawdzenia szczegółów poniżej. NIE podawaj linków ani nie wymyślaj świadczeń spoza podanej bazy.`;
 
       const result = await model.generateContent(prompt);
-      console.log(result.response.text());
       const aiResponse = result.response.text();
 
       const aiMessage = {

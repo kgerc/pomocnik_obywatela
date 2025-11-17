@@ -224,12 +224,6 @@ const LandingPage = () => {
         timestamp: new Date().toISOString()
       });
     }
-
-    // Log do konsoli (development)
-    console.log('📊 Analytics Event:', eventName, metadata, {
-      timestamp: new Date().toISOString(),
-      currentAnalytics: analytics
-    });
   };
 
   const handleEmailSubmit = async (e) => {
@@ -251,6 +245,7 @@ const LandingPage = () => {
       
       setIsSubmitted(true);
       setShowEmailModal(false);
+      addEmailToSheet(email);
       trackEvent('email_signup', { email, source: showEmailModal ? 'modal' : 'hero' });
       
       setTimeout(() => {
@@ -267,6 +262,13 @@ const LandingPage = () => {
       value: 1
     });
   };
+
+  async function addEmailToSheet(email) {
+    await fetch("https://script.google.com/macros/s/AKfycbxlxzJ4mzC4RxWpopHkq8Vd8iN4cNfqnEc1b_lf81DwZEUR8Q1X5Ope7UJ8yBc56uQU/exec", {
+      method: "POST",
+      body: JSON.stringify({ email })
+    });
+  }
 
   const features = [
     {
