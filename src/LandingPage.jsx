@@ -249,21 +249,6 @@ const LandingPage = () => {
       localStorage.setItem('emailList', JSON.stringify(existingEmails));
       localStorage.setItem('emailSubmitted', 'true');
       
-      // Wyślij do Google Sheets (dla Ciebie)
-      try {
-        await fetch('TU_WKLEJ_URL_Z_GOOGLE_APPS_SCRIPT', {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(emailData)
-        });
-        console.log('✅ Email zapisany w Google Sheets');
-      } catch (error) {
-        console.error('❌ Błąd zapisu do Google Sheets:', error);
-      }
-      
       setIsSubmitted(true);
       setShowEmailModal(false);
       trackEvent('email_signup', { email, source: showEmailModal ? 'modal' : 'hero' });
