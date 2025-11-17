@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-    "homepage": "https://kgerc.github.io/pomocnik_obywatela",
+    "homepage": "https://pomocnikobywatela.pl",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
