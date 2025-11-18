@@ -366,7 +366,7 @@ const LandingPage = () => {
         boxSizing: 'border-box'
       }}>
         <div style={{
-          maxWidth: '1400px',
+          maxWidth: '1100px',
           margin: '0 auto',
           display: 'flex',
           justifyContent: 'space-between',
@@ -380,17 +380,14 @@ const LandingPage = () => {
             fontSize: '24px',
             fontWeight: '800',
             color: '#2c5aa0',
-            marginLeft: '100px'
           }}>
             📋 Pomocnik Obywatela
           </div>
           
           <div style={{
-            display: 'flex',
             gap: '30px',
             alignItems: 'center',
-            marginRight: '115px'
-          }}>
+          }} className="mobile-menu">
             <a href="#funkcje" onClick={() => trackEvent('click_nav_funkcje', { category: 'navigation', label: 'funkcje' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Funkcje</a>
             <a href="#screenshots" onClick={() => trackEvent('click_nav_screenshots', { category: 'navigation', label: 'screenshots' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Aplikacja</a>
             <a href="#jak-dziala" onClick={() => trackEvent('click_nav_jakdziala', { category: 'navigation', label: 'jak_dziala' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Jak działa</a>
@@ -1319,6 +1316,14 @@ const LandingPage = () => {
           @keyframes scaleIn {
             from { transform: scale(0.8); }
             to { transform: scale(1); }
+          }
+          .mobile-menu {
+            display: flex;
+          }
+          @media (max-width: 768px) {
+            .mobile-menu {
+              display: none;
+            }
           }
         `}
       </style>
