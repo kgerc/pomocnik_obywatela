@@ -14,6 +14,8 @@ const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [visibleSections, setVisibleSections] = useState(new Set());
   const [openImage, setOpenImage] = useState(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [analytics, setAnalytics] = useState({
     pageViews: 0,
     clicks: {},
@@ -72,16 +74,17 @@ const LandingPage = () => {
   }
 ];
 
-  // Zamknięcie modala po Esc
   useEffect(() => {
     const handleEsc = (e) => {
-      if (e.key === 'Escape') setOpenImage(null);
+      if (e.key === 'Escape') {
+        setOpenImage(null);
+        setShowPrivacyPolicy(false);
+      }
     };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
-  // Intersection Observer do animacji sekcji
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -89,7 +92,6 @@ const LandingPage = () => {
           if (entry.isIntersecting) {
             setVisibleSections((prev) => new Set([...prev, entry.target.id]));
             
-            // Track section view w GA4
             trackEvent('section_view', {
               category: 'engagement',
               label: entry.target.id,
@@ -107,7 +109,6 @@ const LandingPage = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Track scroll depth
   useEffect(() => {
     let maxScroll = 0;
     const trackedDepths = new Set();
@@ -120,7 +121,6 @@ const LandingPage = () => {
       if (scrollPercent > maxScroll) {
         maxScroll = scrollPercent;
         
-        // Track milestones: 25%, 50%, 75%, 90%
         [25, 50, 75, 90].forEach(milestone => {
           if (scrollPercent >= milestone && !trackedDepths.has(milestone)) {
             trackedDepths.add(milestone);
@@ -138,21 +138,17 @@ const LandingPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Analytics tracking
   useEffect(() => {
-    // Track page view
     trackEvent('page_view', {
       category: 'engagement',
       label: 'landing_page_view'
     });
     
-    // Track time on page
     const startTime = Date.now();
     const interval = setInterval(() => {
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
       setAnalytics(prev => ({ ...prev, timeOnPage: timeSpent }));
       
-      // Track milestone времени
       if (timeSpent === 30 || timeSpent === 60 || timeSpent === 120) {
         trackEvent('time_on_page', {
           category: 'engagement',
@@ -162,7 +158,6 @@ const LandingPage = () => {
       }
     }, 1000);
 
-    // Show email modal after 30 seconds
     const modalTimer = setTimeout(() => {
       if (!isSubmitted && !localStorage.getItem('emailSubmitted')) {
         setShowEmailModal(true);
@@ -177,7 +172,6 @@ const LandingPage = () => {
       clearInterval(interval);
       clearTimeout(modalTimer);
       
-      // Track session end
       const finalTime = Math.floor((Date.now() - startTime) / 1000);
       trackEvent('session_end', {
         category: 'engagement',
@@ -199,7 +193,6 @@ const LandingPage = () => {
   }, [analytics]);
 
   const trackEvent = (eventName, metadata = {}) => {
-    // Zapisz lokalnie
     setAnalytics(prev => {
       const newAnalytics = { ...prev };
       
@@ -217,7 +210,6 @@ const LandingPage = () => {
       return newAnalytics;
     });
 
-    // Wyślij do Google Analytics (jeśli zainstalowany)
     if (typeof window.gtag !== 'undefined') {
       window.gtag('event', eventName, {
         ...metadata,
@@ -228,7 +220,7 @@ const LandingPage = () => {
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    if (email) {
+    if (email && privacyAccepted) {
       const emailData = {
         email,
         timestamp: new Date().toISOString(),
@@ -237,7 +229,6 @@ const LandingPage = () => {
         page: window.location.href
       };
 
-      // Zapisz lokalnie (dla użytkownika)
       const existingEmails = JSON.parse(localStorage.getItem('emailList') || '[]');
       existingEmails.push(emailData);
       localStorage.setItem('emailList', JSON.stringify(existingEmails));
@@ -245,6 +236,7 @@ const LandingPage = () => {
       
       setIsSubmitted(true);
       setShowEmailModal(false);
+      setPrivacyAccepted(false);
       addEmailToSheet(email);
       trackEvent('email_signup', { email, source: showEmailModal ? 'modal' : 'hero' });
       
@@ -392,6 +384,7 @@ const LandingPage = () => {
             <a href="#screenshots" onClick={() => trackEvent('click_nav_screenshots', { category: 'navigation', label: 'screenshots' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Aplikacja</a>
             <a href="#jak-dziala" onClick={() => trackEvent('click_nav_jakdziala', { category: 'navigation', label: 'jak_dziala' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Jak działa</a>
             <a href="#faq" onClick={() => trackEvent('click_nav_faq', { category: 'navigation', label: 'faq' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>FAQ</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); setShowPrivacyPolicy(true); }} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Prywatność</a>
           </div>
         </div>
       </nav>
@@ -450,11 +443,11 @@ const LandingPage = () => {
           {!isSubmitted ? (
             <form onSubmit={handleEmailSubmit} style={{
               display: 'flex',
-              gap: '10px',
+              flexDirection: 'column',
+              gap: '15px',
               maxWidth: '500px',
               margin: '0 auto 30px',
-              flexWrap: 'wrap',
-              justifyContent: 'center'
+              alignItems: 'center'
             }}>
               <input
                 type="email"
@@ -463,31 +456,65 @@ const LandingPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 style={{
-                  flex: '1',
-                  minWidth: '250px',
+                  width: '100%',
                   padding: '15px 20px',
                   fontSize: '16px',
                   background: 'rgba(255, 255, 255, 0.87)',
                   border: '2px solid #e1e8ed',
                   borderRadius: '8px',
-                  outline: 'none'
+                  outline: 'none',
+                  boxSizing: 'border-box'
                 }}
               />
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '13px',
+                color: '#5a6c7d',
+                cursor: 'pointer',
+                alignSelf: 'flex-start'
+              }}>
+                <input
+                  type="checkbox"
+                  checked={privacyAccepted}
+                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                  required
+                  style={{ cursor: 'pointer' }}
+                />
+                <span>
+                  Akceptuję{' '}
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowPrivacyPolicy(true);
+                    }}
+                    style={{ color: '#2c5aa0', textDecoration: 'underline' }}
+                  >
+                    politykę prywatności
+                  </a>
+                </span>
+              </label>
               <button
                 type="submit"
                 onClick={() => handleCtaClick('hero_email')}
+                disabled={!privacyAccepted}
                 style={{
-                  background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
+                  background: privacyAccepted ? 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)' : '#ccc',
                   color: 'white',
                   border: 'none',
                   padding: '15px 30px',
                   borderRadius: '8px',
                   fontSize: '16px',
                   fontWeight: '700',
-                  cursor: 'pointer',
+                  cursor: privacyAccepted ? 'pointer' : 'not-allowed',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px'
+                  gap: '8px',
+                  opacity: privacyAccepted ? 1 : 0.6,
+                  width: '100%',
+                  justifyContent: 'center'
                 }}
               >
                 Dołącz do listy <ArrowRight size={20} />
@@ -693,8 +720,6 @@ const LandingPage = () => {
             border: '2px solid #e1e8ed',
             transition: 'all 0.3s ease',
             cursor: 'pointer',
-
-            /* >>> Najważniejsze — karta jako flex column <<< */
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between'
@@ -710,8 +735,6 @@ const LandingPage = () => {
             e.currentTarget.style.borderColor = '#e1e8ed';
           }}
         >
-
-          {/* GÓRA KAFELKA */}
           <div>
             <div style={{
               color: feature.color,
@@ -739,7 +762,6 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* BENEFITY — zawsze na dole */}
           <div style={{
             marginTop: 'auto',
             display: 'flex',
@@ -759,13 +781,11 @@ const LandingPage = () => {
               </div>
             ))}
           </div>
-
         </div>
       ))}
     </div>
   </div>
 </section>
-
 
       {/* Screenshots Section */}
       <section 
@@ -857,7 +877,6 @@ const LandingPage = () => {
                         alt={s.title}
                         style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
                       />
-                      {/* Ikona lupy */}
                       <button
                         onClick={() => setOpenImage(s.img)}
                         style={{
@@ -1001,11 +1020,11 @@ const LandingPage = () => {
           {!isSubmitted ? (
             <form onSubmit={handleEmailSubmit} style={{
               display: 'flex',
-              gap: '10px',
+              flexDirection: 'column',
+              gap: '15px',
               maxWidth: '500px',
               margin: '0 auto',
-              flexWrap: 'wrap',
-              justifyContent: 'center'
+              alignItems: 'center'
             }}>
               <input
                 type="email"
@@ -1014,32 +1033,66 @@ const LandingPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 style={{
-                  flex: '1',
-                  minWidth: '250px',
+                  width: '100%',
                   padding: '15px 20px',
                   fontSize: '16px',
                   border: '2px solid white',
                   background: 'rgba(255, 255, 255, 0.87)',
                   borderRadius: '8px',
-                  outline: 'none'
+                  outline: 'none',
+                  boxSizing: 'border-box'
                 }}
               />
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '13px',
+                color: 'white',
+                cursor: 'pointer',
+                alignSelf: 'flex-start'
+              }}>
+                <input
+                  type="checkbox"
+                  checked={privacyAccepted}
+                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                  required
+                  style={{ cursor: 'pointer' }}
+                />
+                <span>
+                  Akceptuję{' '}
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowPrivacyPolicy(true);
+                    }}
+                    style={{ color: 'white', textDecoration: 'underline', fontWeight: '600' }}
+                  >
+                    politykę prywatności
+                  </a>
+                </span>
+              </label>
               <button
                 type="submit"
                 onClick={() => handleCtaClick('final_email')}
+                disabled={!privacyAccepted}
                 style={{
-                  background: 'white',
-                  color: '#2c5aa0',
+                  background: privacyAccepted ? 'white' : '#ccc',
+                  color: privacyAccepted ? '#2c5aa0' : '#666',
                   border: 'none',
                   padding: '15px 30px',
                   borderRadius: '8px',
                   fontSize: '16px',
                   fontWeight: '700',
-                  cursor: 'pointer',
+                  cursor: privacyAccepted ? 'pointer' : 'not-allowed',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+                  boxShadow: privacyAccepted ? '0 10px 30px rgba(0,0,0,0.2)' : 'none',
+                  opacity: privacyAccepted ? 1 : 0.6,
+                  width: '100%',
+                  justifyContent: 'center'
                 }}
               >
                 Zapisz się <ArrowRight size={20} />
@@ -1099,6 +1152,7 @@ const LandingPage = () => {
               <a href="#screenshots" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Aplikacja</a>
               <a href="#jak-dziala" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Jak działa</a>
               <a href="#faq" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>FAQ</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setShowPrivacyPolicy(true); }} style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Polityka prywatności</a>
               <a href="https://www.gov.pl" target="_blank" rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Gov.pl</a>
             </div>
           </div>
@@ -1210,22 +1264,53 @@ const LandingPage = () => {
                   outline: 'none'
                 }}
               />
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '13px',
+                color: '#5a6c7d',
+                cursor: 'pointer'
+              }}>
+                <input
+                  type="checkbox"
+                  checked={privacyAccepted}
+                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                  required
+                  style={{ cursor: 'pointer' }}
+                />
+                <span>
+                  Akceptuję{' '}
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowPrivacyPolicy(true);
+                    }}
+                    style={{ color: '#2c5aa0', textDecoration: 'underline' }}
+                  >
+                    politykę prywatności
+                  </a>
+                </span>
+              </label>
               <button
                 type="submit"
                 onClick={() => handleCtaClick('modal_email')}
+                disabled={!privacyAccepted}
                 style={{
-                  background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
+                  background: privacyAccepted ? 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)' : '#ccc',
                   color: 'white',
                   border: 'none',
                   padding: '15px 30px',
                   borderRadius: '8px',
                   fontSize: '16px',
                   fontWeight: '700',
-                  cursor: 'pointer',
+                  cursor: privacyAccepted ? 'pointer' : 'not-allowed',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '10px'
+                  gap: '10px',
+                  opacity: privacyAccepted ? 1 : 0.6
                 }}
               >
                 <Mail size={20} />
@@ -1241,6 +1326,214 @@ const LandingPage = () => {
             }}>
               Nie wysyłamy spamu. Możesz zrezygnować w każdej chwili.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* Privacy Policy Modal */}
+      {showPrivacyPolicy && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.6)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000,
+          padding: '20px',
+          overflowY: 'auto'
+        }}>
+          <div style={{
+            background: 'white',
+            padding: '40px',
+            borderRadius: '16px',
+            maxWidth: '800px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            position: 'relative',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
+          }}>
+            <button
+              onClick={() => setShowPrivacyPolicy(false)}
+              style={{
+                position: 'sticky',
+                top: '0',
+                float: 'right',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: '#5a6c7d',
+                fontSize: '24px',
+                padding: '5px'
+              }}
+            >
+              <X size={24} />
+            </button>
+            
+            <h2 style={{
+              fontSize: '32px',
+              fontWeight: '900',
+              color: '#2c3e50',
+              marginBottom: '20px'
+            }}>
+              Polityka Prywatności
+            </h2>
+
+            <div style={{
+              fontSize: '15px',
+              color: '#5a6c7d',
+              lineHeight: '1.8'
+            }}>
+              <p style={{ marginBottom: '15px' }}>
+                <strong>Data ostatniej aktualizacji:</strong> {new Date().toLocaleDateString('pl-PL')}
+              </p>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                1. Administrator Danych
+              </h3>
+              <p style={{ marginBottom: '15px' }}>
+                Administratorem Twoich danych osobowych jest właściciel serwisu "Pomocnik Obywatela". 
+                Kontakt w sprawach związanych z ochroną danych osobowych: pomocnikobywatela@gmail.com.
+              </p>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                2. Jakie dane zbieramy?
+              </h3>
+              <p style={{ marginBottom: '15px' }}>
+                Zbieramy wyłącznie Twój adres e-mail, który podajesz dobrowolnie poprzez formularze zapisu na stronie. 
+                Nie zbieramy żadnych innych danych osobowych.
+              </p>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                3. Cel przetwarzania danych
+              </h3>
+              <p style={{ marginBottom: '10px' }}>
+                Twój adres e-mail wykorzystujemy wyłącznie w celu:
+              </p>
+              <ul style={{ marginBottom: '15px', paddingLeft: '25px' }}>
+                <li>wysyłania powiadomień o uruchomieniu serwisu,</li>
+                <li>informowania o nowych funkcjach i aktualizacjach,</li>
+                <li>przesyłania newslettera z informacjami o świadczeniach publicznych (za Twoją zgodą).</li>
+              </ul>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                4. Podstawa prawna przetwarzania
+              </h3>
+              <p style={{ marginBottom: '15px' }}>
+                Przetwarzamy Twoje dane na podstawie:
+              </p>
+              <ul style={{ marginBottom: '15px', paddingLeft: '25px' }}>
+                <li><strong>Art. 6 ust. 1 lit. a RODO</strong> – Twoja dobrowolna zgoda wyrażona poprzez zaznaczenie checkboxa przy zapisie na listę mailingową.</li>
+                <li><strong>Art. 6 ust. 1 lit. f RODO</strong> – nasz prawnie uzasadniony interes w postaci komunikacji z zainteresowanymi użytkownikami.</li>
+              </ul>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                5. Jak długo przechowujemy dane?
+              </h3>
+              <p style={{ marginBottom: '15px' }}>
+                Twój adres e-mail będzie przechowywany do momentu:
+              </p>
+              <ul style={{ marginBottom: '15px', paddingLeft: '25px' }}>
+                <li>wycofania zgody na przetwarzanie danych,</li>
+                <li>zgłoszenia sprzeciwu wobec przetwarzania,</li>
+                <li>zrealizowania celu, w jakim zostały zebrane (maksymalnie do 3 lat od ostatniej interakcji).</li>
+              </ul>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                6. Udostępnianie danych
+              </h3>
+              <p style={{ marginBottom: '15px' }}>
+                Twoje dane mogą być udostępniane wyłącznie:
+              </p>
+              <ul style={{ marginBottom: '15px', paddingLeft: '25px' }}>
+                <li>dostawcom usług IT wspierających działanie serwisu (np. Google Sheets, hosting),</li>
+                <li>dostawcom usług mailowych (jeśli wdrożymy system mailingowy).</li>
+              </ul>
+              <p style={{ marginBottom: '15px' }}>
+                <strong>Nie sprzedajemy, nie udostępniamy ani nie przekazujemy Twoich danych osobowych stronom trzecim w celach marketingowych.</strong>
+              </p>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                7. Twoje prawa
+              </h3>
+              <p style={{ marginBottom: '10px' }}>
+                Masz prawo do:
+              </p>
+              <ul style={{ marginBottom: '15px', paddingLeft: '25px' }}>
+                <li><strong>dostępu</strong> do swoich danych osobowych,</li>
+                <li><strong>sprostowania</strong> nieprawidłowych danych,</li>
+                <li><strong>usunięcia</strong> danych ("prawo do bycia zapomnianym"),</li>
+                <li><strong>ograniczenia przetwarzania</strong> danych,</li>
+                <li><strong>przenoszenia</strong> danych,</li>
+                <li><strong>wniesienia sprzeciwu</strong> wobec przetwarzania,</li>
+                <li><strong>wycofania zgody</strong> w dowolnym momencie (bez wpływu na zgodność z prawem przetwarzania dokonanego przed jej wycofaniem).</li>
+              </ul>
+              <p style={{ marginBottom: '15px' }}>
+                Aby skorzystać z tych praw, skontaktuj się z nami pod adresem: pomocnikobywatela@gmail.com.
+              </p>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                8. Bezpieczeństwo danych
+              </h3>
+              <p style={{ marginBottom: '15px' }}>
+                Stosujemy odpowiednie środki techniczne i organizacyjne w celu zapewnienia bezpieczeństwa Twoich danych osobowych, 
+                w tym szyfrowanie połączeń HTTPS oraz bezpieczne przechowywanie danych.
+              </p>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                9. Pliki cookies i analityka
+              </h3>
+              <p style={{ marginBottom: '15px' }}>
+                Serwis może wykorzystywać pliki cookies oraz narzędzia analityczne (Google Analytics) w celu analizy ruchu i ulepszania usług. 
+                Dane analityczne są przetwarzane w sposób zanonimizowany i nie są łączone z Twoim adresem e-mail.
+              </p>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                10. Prawo do skargi
+              </h3>
+              <p style={{ marginBottom: '15px' }}>
+                Jeśli uważasz, że przetwarzanie Twoich danych osobowych narusza przepisy RODO, masz prawo wnieść skargę do organu nadzorczego – 
+                Prezesa Urzędu Ochrony Danych Osobowych (PUODO).
+              </p>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                11. Zmiany w Polityce Prywatności
+              </h3>
+              <p style={{ marginBottom: '15px' }}>
+                Zastrzegamy sobie prawo do wprowadzania zmian w niniejszej Polityce Prywatności. 
+                Wszelkie zmiany będą publikowane na tej stronie wraz z datą ostatniej aktualizacji.
+              </p>
+
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#2c3e50', marginTop: '25px', marginBottom: '12px' }}>
+                12. Kontakt
+              </h3>
+              <p style={{ marginBottom: '15px' }}>
+                W razie pytań dotyczących ochrony danych osobowych, skontaktuj się z nami:<br />
+                <strong>E-mail:</strong> pomocnikobywatela@gmail.com
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowPrivacyPolicy(false)}
+              style={{
+                marginTop: '30px',
+                background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
+                color: 'white',
+                border: 'none',
+                padding: '12px 30px',
+                borderRadius: '8px',
+                fontSize: '16px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                width: '100%'
+              }}
+            >
+              Zamknij
+            </button>
           </div>
         </div>
       )}
@@ -1265,7 +1558,6 @@ const LandingPage = () => {
           }}
           onClick={() => setOpenImage(null)}
         >
-          {/* Przycisk zamykania */}
           <button
             onClick={() => setOpenImage(null)}
             style={{
