@@ -490,7 +490,7 @@ const LandingPage = () => {
                       e.preventDefault();
                       setShowPrivacyPolicy(true);
                     }}
-                    style={{ color: '#2c5aa0', textDecoration: 'underline' }}
+                    style={{ color: '#2c5aa0', textDecoration: 'underline', transition: 'background 0.3s' }}
                   >
                     politykę prywatności
                   </a>
@@ -1067,7 +1067,7 @@ const LandingPage = () => {
                       e.preventDefault();
                       setShowPrivacyPolicy(true);
                     }}
-                    style={{ color: 'white', textDecoration: 'underline', fontWeight: '600' }}
+                    style={{ color: 'white', textDecoration: 'underline', fontWeight: '600', transition: 'background 0.3s' }}
                   >
                     politykę prywatności
                   </a>
@@ -1152,7 +1152,7 @@ const LandingPage = () => {
               <a href="#screenshots" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Aplikacja</a>
               <a href="#jak-dziala" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Jak działa</a>
               <a href="#faq" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>FAQ</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); setShowPrivacyPolicy(true); }} style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Polityka prywatności</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setShowPrivacyPolicy(true); }} style={{ color: 'white', textDecoration: 'none', opacity: 0.8, transition: 'background 0.3s' }}>Polityka prywatności</a>
               <a href="https://www.gov.pl" target="_blank" rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Gov.pl</a>
             </div>
           </div>
@@ -1287,7 +1287,7 @@ const LandingPage = () => {
                       e.preventDefault();
                       setShowPrivacyPolicy(true);
                     }}
-                    style={{ color: '#2c5aa0', textDecoration: 'underline' }}
+                    style={{ color: '#2c5aa0', textDecoration: 'underline', transition: 'background 0.3s' }}
                   >
                     politykę prywatności
                   </a>
@@ -1344,7 +1344,7 @@ const LandingPage = () => {
           justifyContent: 'center',
           zIndex: 2000,
           padding: '20px',
-          overflowY: 'auto'
+          animation: 'fadeIn 0.3s ease'
         }}>
           <div style={{
             background: 'white',
@@ -1360,7 +1360,6 @@ const LandingPage = () => {
             <button
               onClick={() => setShowPrivacyPolicy(false)}
               style={{
-                position: 'sticky',
                 top: '0',
                 float: 'right',
                 background: 'none',
@@ -1368,7 +1367,8 @@ const LandingPage = () => {
                 cursor: 'pointer',
                 color: '#5a6c7d',
                 fontSize: '24px',
-                padding: '5px'
+                padding: '5px',
+                transition: 'background 0.3s'
               }}
             >
               <X size={24} />
@@ -1386,7 +1386,7 @@ const LandingPage = () => {
             <div style={{
               fontSize: '15px',
               color: '#5a6c7d',
-              lineHeight: '1.8'
+              lineHeight: '1.8',
             }}>
               <p style={{ marginBottom: '15px' }}>
                 <strong>Data ostatniej aktualizacji:</strong> {new Date().toLocaleDateString('pl-PL')}
