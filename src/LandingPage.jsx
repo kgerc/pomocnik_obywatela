@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { MessageSquare, FileText, TrendingUp, Sparkles, Search, CheckCircle, ArrowRight, Users, User, Database, Bell, Clock, Shield, Mail, X, Menu, ExternalLink, BarChart3, Monitor, Smartphone, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { MessageSquare, FileText, TrendingUp, Sparkles, Search, CheckCircle, ArrowRight, Users, User, Database, Bell, Shield, Mail, X } from 'lucide-react';
+import SEO from './components/SEO';
 import aiChatImg from './assets/ai_chat.png';
 import aiPismaImg from './assets/ai_pisma.png';
 import aiDotacjeImg from './assets/ai_dotacje.png';
@@ -11,7 +12,6 @@ const LandingPage = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [visibleSections, setVisibleSections] = useState(new Set());
   const [openImage, setOpenImage] = useState(null);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
@@ -286,13 +286,6 @@ const LandingPage = () => {
     }
   ];
 
-  const stats = [
-    { number: '30+', label: 'Świadczeń w bazie', icon: <CheckCircle size={24} /> },
-    { number: '20+', label: 'Wzorów dokumentów', icon: <FileText size={24} /> },
-    { number: '25+', label: 'Programów dotacyjnych', icon: <TrendingUp size={24} /> },
-    { number: '24/7', label: 'Dostępność AI', icon: <Clock size={24} /> }
-  ];
-
   const howItWorks = [
     {
       step: '1',
@@ -334,18 +327,28 @@ const LandingPage = () => {
   ];
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      minWidth: '100%',
-      width: '100%',
-      background: '#ffffff',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      margin: 0,
-      padding: 0,
-      overflowX: 'hidden'
-    }}>
-      {/* Navigation */}
-      <nav style={{
+    <>
+      {/* SEO Component */}
+      <SEO
+        title="Pomocnik Obywatela - Wszystkie świadczenia publiczne w jednym miejscu | AI Asystent"
+        description="Asystent ze sztuczną inteligencją, który w sekundach znajdzie świadczenia, dotacje i dokumenty urzędowe. Bez biurokracji, bez skomplikowanych formularzy. Sprawdź 30+ świadczeń, 20+ wzorów dokumentów i 25+ programów dotacyjnych."
+        keywords="świadczenia publiczne, dotacje, asystent AI, pomoc obywatelska, wnioski urzędowe, dokumenty urzędowe, ZUS, 500+, 800+, ulga podatkowa, wsparcie rodzin, program dotacyjny, reklamacje, odwołania"
+        ogImage="https://pomocnikobywatela.pl/logo.png"
+        canonicalUrl="https://pomocnikobywatela.pl/"
+      />
+
+      <div style={{
+        minHeight: '100vh',
+        minWidth: '100%',
+        width: '100%',
+        background: '#ffffff',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        margin: 0,
+        padding: 0,
+        overflowX: 'hidden'
+      }}>
+        {/* Navigation */}
+      <nav role="navigation" aria-label="Główna nawigacja" style={{
         position: 'sticky',
         top: 0,
         background: 'rgba(255, 255, 255, 0.95)',
@@ -517,7 +520,7 @@ const LandingPage = () => {
                   justifyContent: 'center'
                 }}
               >
-                Dołącz do listy <ArrowRight size={20} />
+                Dołącz do listy oczekujących<ArrowRight size={20} />
               </button>
             </form>
           ) : (
@@ -1620,6 +1623,7 @@ const LandingPage = () => {
         `}
       </style>
     </div>
+    </>
   );
 };
 
