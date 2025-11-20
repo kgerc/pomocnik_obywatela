@@ -330,8 +330,8 @@ const LandingPage = () => {
     <>
       {/* SEO Component */}
       <SEO
-        title="Pomocnik Obywatela - Wszystkie świadczenia publiczne w jednym miejscu | AI Asystent"
-        description="Asystent ze sztuczną inteligencją, który w sekundach znajdzie świadczenia, dotacje i dokumenty urzędowe. Bez biurokracji, bez skomplikowanych formularzy. Sprawdź 30+ świadczeń, 20+ wzorów dokumentów i 25+ programów dotacyjnych."
+        title="Pomocnik Obywatela - Świadczenia, Dotacje i Dokumenty | AI"
+        description="AI asystent znajdzie świadczenia, dotacje i dokumenty urzędowe w sekundach. 30+ świadczeń (500+, 800+, ZUS), 20+ wzorów pism, 25+ dotacji. Bez biurokracji!"
         keywords="świadczenia publiczne, dotacje, asystent AI, pomoc obywatelska, wnioski urzędowe, dokumenty urzędowe, ZUS, 500+, 800+, ulga podatkowa, wsparcie rodzin, program dotacyjny, reklamacje, odwołania"
         ogImage="https://pomocnikobywatela.pl/logo.png"
         canonicalUrl="https://pomocnikobywatela.pl/"
