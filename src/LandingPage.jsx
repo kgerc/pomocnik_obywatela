@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, FileText, TrendingUp, Sparkles, Search, CheckCircle, ArrowRight, Users, User, Database, Bell, Shield, Mail, X } from 'lucide-react';
+import { MessageSquare, FileText, TrendingUp, Sparkles, Search, CheckCircle, ArrowRight, Users, User, Database, Bell, Shield, X } from 'lucide-react';
 import SEO from './components/SEO';
 import aiChatImg from './assets/ai_chat.png';
 import aiPismaImg from './assets/ai_pisma.png';
@@ -9,18 +9,13 @@ import powiadomieniaImg from './assets/powiadomienia.png';
 import bazaDanychImg from './assets/baza_danych.png';
 
 const LandingPage = () => {
-  const [email, setEmail] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [showEmailModal, setShowEmailModal] = useState(false);
   const [visibleSections, setVisibleSections] = useState(new Set());
   const [openImage, setOpenImage] = useState(null);
-  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [analytics, setAnalytics] = useState({
     pageViews: 0,
     clicks: {},
-    timeOnPage: 0,
-    emailSignups: 0
+    timeOnPage: 0
   });
 
   const screenshots = [
@@ -158,20 +153,9 @@ const LandingPage = () => {
       }
     }, 1000);
 
-    const modalTimer = setTimeout(() => {
-      if (!isSubmitted && !localStorage.getItem('emailSubmitted')) {
-        setShowEmailModal(true);
-        trackEvent('email_modal_shown', {
-          category: 'engagement',
-          label: 'auto_popup_30s'
-        });
-      }
-    }, 30000);
-
     return () => {
       clearInterval(interval);
-      clearTimeout(modalTimer);
-      
+
       const finalTime = Math.floor((Date.now() - startTime) / 1000);
       trackEvent('session_end', {
         category: 'engagement',
@@ -203,10 +187,8 @@ const LandingPage = () => {
           ...prev.clicks,
           [eventName]: (prev.clicks[eventName] || 0) + 1
         };
-      } else if (eventName === 'email_signup') {
-        newAnalytics.emailSignups = (prev.emailSignups || 0) + 1;
       }
-      
+
       return newAnalytics;
     });
 
@@ -218,35 +200,6 @@ const LandingPage = () => {
     }
   };
 
-  const handleEmailSubmit = async (e) => {
-    e.preventDefault();
-    if (email && privacyAccepted) {
-      const emailData = {
-        email,
-        timestamp: new Date().toISOString(),
-        source: showEmailModal ? 'modal' : 'hero',
-        userAgent: navigator.userAgent,
-        page: window.location.href
-      };
-
-      const existingEmails = JSON.parse(localStorage.getItem('emailList') || '[]');
-      existingEmails.push(emailData);
-      localStorage.setItem('emailList', JSON.stringify(existingEmails));
-      localStorage.setItem('emailSubmitted', 'true');
-      
-      setIsSubmitted(true);
-      setShowEmailModal(false);
-      setPrivacyAccepted(false);
-      addEmailToSheet(email);
-      trackEvent('email_signup', { email, source: showEmailModal ? 'modal' : 'hero' });
-      
-      setTimeout(() => {
-        setIsSubmitted(false);
-        setEmail('');
-      }, 3000);
-    }
-  };
-
   const handleCtaClick = (ctaName) => {
     trackEvent(`click_cta_${ctaName}`, {
       category: 'cta',
@@ -254,13 +207,6 @@ const LandingPage = () => {
       value: 1
     });
   };
-
-  async function addEmailToSheet(email) {
-    await fetch("https://script.google.com/macros/s/AKfycbxlxzJ4mzC4RxWpopHkq8Vd8iN4cNfqnEc1b_lf81DwZEUR8Q1X5Ope7UJ8yBc56uQU/exec", {
-      method: "POST",
-      body: JSON.stringify({ email })
-    });
-  }
 
   const features = [
     {
@@ -443,104 +389,37 @@ const LandingPage = () => {
             Asystent ze sztuczną inteligencją, który w sekundach znajdzie dla Ciebie odpowiednie świadczenia, dotacje i dokumenty. Bez skomplikowanych formularzy, bez biurokracji.
           </p>
 
-          {!isSubmitted ? (
-            <form onSubmit={handleEmailSubmit} style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '15px',
-              maxWidth: '500px',
-              margin: '0 auto 30px',
-              alignItems: 'center'
-            }}>
-              <input
-                type="email"
-                placeholder="Twój email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                style={{
-                  width: '100%',
-                  padding: '15px 20px',
-                  fontSize: '16px',
-                  background: 'rgba(255, 255, 255, 0.87)',
-                  border: '2px solid #e1e8ed',
-                  borderRadius: '8px',
-                  outline: 'none',
-                  boxSizing: 'border-box'
-                }}
-              />
-              <label style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                fontSize: '13px',
-                color: '#5a6c7d',
-                cursor: 'pointer',
-                alignSelf: 'flex-start'
-              }}>
-                <input
-                  type="checkbox"
-                  checked={privacyAccepted}
-                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
-                  required
-                  style={{ cursor: 'pointer' }}
-                />
-                <span>
-                  Akceptuję{' '}
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowPrivacyPolicy(true);
-                    }}
-                    style={{ color: '#2c5aa0', textDecoration: 'underline', transition: 'background 0.3s' }}
-                  >
-                    politykę prywatności
-                  </a>
-                </span>
-              </label>
-              <button
-                type="submit"
-                onClick={() => handleCtaClick('hero_email')}
-                disabled={!privacyAccepted}
-                style={{
-                  background: privacyAccepted ? 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)' : '#ccc',
-                  color: 'white',
-                  border: 'none',
-                  padding: '15px 30px',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  fontWeight: '700',
-                  cursor: privacyAccepted ? 'pointer' : 'not-allowed',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  opacity: privacyAccepted ? 1 : 0.6,
-                  width: '100%',
-                  justifyContent: 'center'
-                }}
-              >
-                Dołącz do listy oczekujących<ArrowRight size={20} />
-              </button>
-            </form>
-          ) : (
-            <div style={{
-              background: 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)',
-              padding: '15px 30px',
-              borderRadius: '8px',
-              maxWidth: '500px',
-              margin: '0 auto 30px',
-              display: 'flex',
+          <a
+            href="https://app.pomocnikobywatela.pl"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleCtaClick('hero_app_launch')}
+            style={{
+              display: 'inline-flex',
               alignItems: 'center',
-              justifyContent: 'center',
               gap: '10px',
-              color: '#059669',
-              fontWeight: '600'
-            }}>
-              <CheckCircle size={24} />
-              Dziękujemy! Powiadomimy Cię o nowościach.
-            </div>
-          )}
+              background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
+              color: 'white',
+              padding: '18px 40px',
+              borderRadius: '12px',
+              fontSize: '18px',
+              fontWeight: '700',
+              textDecoration: 'none',
+              boxShadow: '0 10px 30px rgba(44, 90, 160, 0.3)',
+              transition: 'all 0.3s ease',
+              marginBottom: '30px'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-3px)';
+              e.currentTarget.style.boxShadow = '0 15px 40px rgba(44, 90, 160, 0.4)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 10px 30px rgba(44, 90, 160, 0.3)';
+            }}
+          >
+            Otwórz Aplikację <ArrowRight size={24} />
+          </a>
 
           <div style={{
             display: 'flex',
@@ -1010,115 +889,46 @@ const LandingPage = () => {
             fontWeight: '900',
             marginBottom: '20px'
           }}>
-            Gotowy, aby zacząć?
+            Zacznij już teraz!
           </h2>
           <p style={{
             fontSize: '20px',
             marginBottom: '40px',
             opacity: 0.9
           }}>
-            Dołącz do listy i bądź na bieżąco z nowościami
+            Znajdź świadczenia, dotacje i dokumenty w kilka sekund
           </p>
-          
-          {!isSubmitted ? (
-            <form onSubmit={handleEmailSubmit} style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '15px',
-              maxWidth: '500px',
-              margin: '0 auto',
-              alignItems: 'center'
-            }}>
-              <input
-                type="email"
-                placeholder="Twój email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                style={{
-                  width: '100%',
-                  padding: '15px 20px',
-                  fontSize: '16px',
-                  border: '2px solid white',
-                  background: 'rgba(255, 255, 255, 0.87)',
-                  borderRadius: '8px',
-                  outline: 'none',
-                  boxSizing: 'border-box'
-                }}
-              />
-              <label style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                fontSize: '13px',
-                color: 'white',
-                cursor: 'pointer',
-                alignSelf: 'flex-start'
-              }}>
-                <input
-                  type="checkbox"
-                  checked={privacyAccepted}
-                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
-                  required
-                  style={{ cursor: 'pointer' }}
-                />
-                <span>
-                  Akceptuję{' '}
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowPrivacyPolicy(true);
-                    }}
-                    style={{ color: 'white', textDecoration: 'underline', fontWeight: '600', transition: 'background 0.3s' }}
-                  >
-                    politykę prywatności
-                  </a>
-                </span>
-              </label>
-              <button
-                type="submit"
-                onClick={() => handleCtaClick('final_email')}
-                disabled={!privacyAccepted}
-                style={{
-                  background: privacyAccepted ? 'white' : '#ccc',
-                  color: privacyAccepted ? '#2c5aa0' : '#666',
-                  border: 'none',
-                  padding: '15px 30px',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  fontWeight: '700',
-                  cursor: privacyAccepted ? 'pointer' : 'not-allowed',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  boxShadow: privacyAccepted ? '0 10px 30px rgba(0,0,0,0.2)' : 'none',
-                  opacity: privacyAccepted ? 1 : 0.6,
-                  width: '100%',
-                  justifyContent: 'center'
-                }}
-              >
-                Zapisz się <ArrowRight size={20} />
-              </button>
-            </form>
-          ) : (
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.2)',
-              padding: '15px 30px',
-              borderRadius: '8px',
-              maxWidth: '500px',
-              margin: '0 auto',
-              display: 'flex',
+
+          <a
+            href="https://app.pomocnikobywatela.pl"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleCtaClick('final_app_launch')}
+            style={{
+              display: 'inline-flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-              fontWeight: '600',
-              backdropFilter: 'blur(10px)'
-            }}>
-              <CheckCircle size={24} />
-              Dziękujemy za zapis!
-            </div>
-          )}
+              gap: '12px',
+              background: 'white',
+              color: '#2c5aa0',
+              padding: '20px 50px',
+              borderRadius: '12px',
+              fontSize: '20px',
+              fontWeight: '700',
+              textDecoration: 'none',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.3)',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.4)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.3)';
+            }}
+          >
+            Otwórz Aplikację <ArrowRight size={26} />
+          </a>
         </div>
       </section>
 
@@ -1175,163 +985,6 @@ const LandingPage = () => {
         </div>
       </footer>
 
-      {/* Email Modal */}
-      {showEmailModal && !localStorage.getItem('emailSubmitted') && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(0,0,0,0.6)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 2000,
-          padding: '20px'
-        }}>
-          <div style={{
-            background: 'white',
-            padding: '40px',
-            borderRadius: '16px',
-            maxWidth: '500px',
-            width: '100%',
-            position: 'relative',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
-          }}>
-            <button
-              onClick={() => {
-                setShowEmailModal(false);
-                trackEvent('click_modal_close', {
-                  category: 'engagement',
-                  label: 'email_modal_dismissed'
-                });
-              }}
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                color: '#5a6c7d'
-              }}
-            >
-              <X size={24} />
-            </button>
-            
-            <div style={{
-              textAlign: 'center',
-              marginBottom: '25px'
-            }}>
-              <div style={{
-                fontSize: '48px',
-                marginBottom: '15px'
-              }}>
-                🎉
-              </div>
-              <h3 style={{
-                fontSize: '28px',
-                fontWeight: '800',
-                color: '#2c3e50',
-                marginBottom: '12px'
-              }}>
-                Nie przegap nowości!
-              </h3>
-              <p style={{
-                fontSize: '16px',
-                color: '#5a6c7d',
-                lineHeight: '1.6'
-              }}>
-                Dołącz do ekskluzywnej listy i dowiedz się pierwszy o nowych funkcjach, świadczeniach i aktualizacjach.
-              </p>
-            </div>
-
-            <form onSubmit={handleEmailSubmit} style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '15px'
-            }}>
-              <input
-                type="email"
-                placeholder="Twój adres email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                style={{
-                  padding: '15px 20px',
-                  fontSize: '16px',
-                  border: '2px solid #e1e8ed',
-                  background: 'rgba(255, 255, 255, 0.87)',
-                  borderRadius: '8px',
-                  outline: 'none'
-                }}
-              />
-              <label style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                fontSize: '13px',
-                color: '#5a6c7d',
-                cursor: 'pointer'
-              }}>
-                <input
-                  type="checkbox"
-                  checked={privacyAccepted}
-                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
-                  required
-                  style={{ cursor: 'pointer' }}
-                />
-                <span>
-                  Akceptuję{' '}
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowPrivacyPolicy(true);
-                    }}
-                    style={{ color: '#2c5aa0', textDecoration: 'underline', transition: 'background 0.3s' }}
-                  >
-                    politykę prywatności
-                  </a>
-                </span>
-              </label>
-              <button
-                type="submit"
-                onClick={() => handleCtaClick('modal_email')}
-                disabled={!privacyAccepted}
-                style={{
-                  background: privacyAccepted ? 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)' : '#ccc',
-                  color: 'white',
-                  border: 'none',
-                  padding: '15px 30px',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  fontWeight: '700',
-                  cursor: privacyAccepted ? 'pointer' : 'not-allowed',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px',
-                  opacity: privacyAccepted ? 1 : 0.6
-                }}
-              >
-                <Mail size={20} />
-                Zapisz mnie
-              </button>
-            </form>
-
-            <p style={{
-              fontSize: '12px',
-              color: '#999',
-              textAlign: 'center',
-              marginTop: '15px'
-            }}>
-              Nie wysyłamy spamu. Możesz zrezygnować w każdej chwili.
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* Privacy Policy Modal */}
       {showPrivacyPolicy && (
