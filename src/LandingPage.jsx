@@ -331,9 +331,9 @@ const LandingPage = () => {
           }} className="mobile-menu">
             <a href="#funkcje" onClick={() => trackEvent('click_nav_funkcje', { category: 'navigation', label: 'funkcje' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Funkcje</a>
             <a href="#screenshots" onClick={() => trackEvent('click_nav_screenshots', { category: 'navigation', label: 'screenshots' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Aplikacja</a>
+            <a href="https://pisma.pomocnikobywatela.pl" target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('click_nav_generator', { category: 'navigation', label: 'generator' })} style={{ color: '#10b981', textDecoration: 'none', fontWeight: '600' }}>Generator AI</a>
             <a href="#jak-dziala" onClick={() => trackEvent('click_nav_jakdziala', { category: 'navigation', label: 'jak_dziala' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Jak działa</a>
             <a href="#faq" onClick={() => trackEvent('click_nav_faq', { category: 'navigation', label: 'faq' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>FAQ</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); setShowPrivacyPolicy(true); }} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Prywatność</a>
           </div>
         </div>
       </nav>
@@ -389,37 +389,80 @@ const LandingPage = () => {
             Asystent ze sztuczną inteligencją, który w sekundach znajdzie dla Ciebie odpowiednie świadczenia, dotacje i dokumenty. Bez skomplikowanych formularzy, bez biurokracji.
           </p>
 
-          <a
-            href="https://app.pomocnikobywatela.pl"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => handleCtaClick('hero_app_launch')}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '10px',
-              background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
-              color: 'white',
-              padding: '18px 40px',
-              borderRadius: '12px',
-              fontSize: '18px',
-              fontWeight: '700',
-              textDecoration: 'none',
-              boxShadow: '0 10px 30px rgba(44, 90, 160, 0.3)',
-              transition: 'all 0.3s ease',
-              marginBottom: '30px'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-3px)';
-              e.currentTarget.style.boxShadow = '0 15px 40px rgba(44, 90, 160, 0.4)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 10px 30px rgba(44, 90, 160, 0.3)';
-            }}
-          >
-            Otwórz Aplikację <ArrowRight size={24} />
-          </a>
+          <div style={{
+            display: 'flex',
+            gap: '20px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            marginBottom: '30px'
+          }}>
+            <a
+              href="https://app.pomocnikobywatela.pl"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handleCtaClick('hero_app_launch')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                background: 'linear-gradient(135deg, #2c5aa0 0%, #4a7dc9 100%)',
+                color: 'white',
+                padding: '18px 40px',
+                borderRadius: '12px',
+                fontSize: '18px',
+                fontWeight: '700',
+                textDecoration: 'none',
+                boxShadow: '0 10px 30px rgba(44, 90, 160, 0.3)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = '0 15px 40px rgba(44, 90, 160, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 10px 30px rgba(44, 90, 160, 0.3)';
+              }}
+            >
+              Otwórz Aplikację <ArrowRight size={24} />
+            </a>
+
+            <a
+              href="https://pisma.pomocnikobywatela.pl"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handleCtaClick('hero_pisma_generator')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                background: 'white',
+                color: '#2c5aa0',
+                padding: '18px 40px',
+                borderRadius: '12px',
+                fontSize: '18px',
+                fontWeight: '700',
+                textDecoration: 'none',
+                border: '3px solid #2c5aa0',
+                boxShadow: '0 10px 30px rgba(44, 90, 160, 0.15)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = '0 15px 40px rgba(44, 90, 160, 0.25)';
+                e.currentTarget.style.background = '#f8fafc';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 10px 30px rgba(44, 90, 160, 0.15)';
+                e.currentTarget.style.background = 'white';
+              }}
+            >
+              <FileText size={24} />
+              Generator Pism AI
+            </a>
+          </div>
 
           <div style={{
             display: 'flex',
@@ -662,6 +705,44 @@ const LandingPage = () => {
                 {benefit}
               </div>
             ))}
+
+            {/* Add Generator Link for "Baza Pism" feature */}
+            {idx === 1 && (
+              <a
+                href="https://pisma.pomocnikobywatela.pl"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCtaClick('feature_pisma_generator');
+                }}
+                style={{
+                  marginTop: '15px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '12px 20px',
+                  background: feature.color,
+                  color: 'white',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  fontSize: '15px',
+                  fontWeight: '600',
+                  transition: 'all 0.3s ease',
+                  alignSelf: 'flex-start'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.3)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                Generuj Pismo AI <ArrowRight size={18} />
+              </a>
+            )}
           </div>
         </div>
       ))}
@@ -929,6 +1010,31 @@ const LandingPage = () => {
           >
             Otwórz Aplikację <ArrowRight size={26} />
           </a>
+
+          <p style={{
+            fontSize: '16px',
+            marginTop: '25px',
+            opacity: 0.9
+          }}>
+            lub skorzystaj z{' '}
+            <a
+              href="https://pisma.pomocnikobywatela.pl"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handleCtaClick('final_pisma_generator')}
+              style={{
+                color: 'white',
+                textDecoration: 'underline',
+                fontWeight: '700',
+                transition: 'opacity 0.3s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
+              onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+            >
+              Generatora Pism AI
+            </a>
+            {' '}(bez rejestracji)
+          </p>
         </div>
       </section>
 
@@ -963,6 +1069,7 @@ const LandingPage = () => {
             }}>
               <a href="#funkcje" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Funkcje</a>
               <a href="#screenshots" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Aplikacja</a>
+              <a href="https://pisma.pomocnikobywatela.pl" target="_blank" rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Generator Pism AI</a>
               <a href="#jak-dziala" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Jak działa</a>
               <a href="#faq" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>FAQ</a>
               <a href="#" onClick={(e) => { e.preventDefault(); setShowPrivacyPolicy(true); }} style={{ color: 'white', textDecoration: 'none', opacity: 0.8, transition: 'background 0.3s' }}>Polityka prywatności</a>
