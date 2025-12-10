@@ -1,0 +1,35 @@
+{
+  "name": "Pomocnik Obywatela - Asystent AI",
+  "short_name": "Pomocnik Obywatela",
+  "description": "Asystent ze sztuczną inteligencją do wyszukiwania świadczeń publicznych, dotacji i dokumentów urzędowych",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2c5aa0",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["government", "utilities", "productivity"],
+  "lang": "pl",
+  "dir": "ltr",
+  "scope": "/",
+  "screenshots": [
+    {
+      "src": "/logo.png",
+      "sizes": "1280x720",
+      "type": "image/png"
+    }
+  ]
+}
