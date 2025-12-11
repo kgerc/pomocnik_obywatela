@@ -1,7 +1,7 @@
 {
-  "name": "Pomocnik Obywatela - Asystent AI",
+  "name": "Pomocnik Obywatela - Inteligentny Asystent",
   "short_name": "Pomocnik Obywatela",
-  "description": "Asystent ze sztuczną inteligencją do wyszukiwania świadczeń publicznych, dotacji i dokumentów urzędowych",
+  "description": "Inteligentny asystent do wyszukiwania świadczeń publicznych, dotacji i dokumentów urzędowych",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

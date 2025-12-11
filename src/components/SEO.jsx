@@ -5,9 +5,9 @@ import { useEffect } from 'react';
  * Use this component to set page-specific SEO metadata
  */
 const SEO = ({
-  title = "Pomocnik Obywatela - Wszystkie świadczenia publiczne w jednym miejscu | AI Asystent",
-  description = "Asystent ze sztuczną inteligencją, który w sekundach znajdzie świadczenia, dotacje i dokumenty urzędowe. Bez biurokracji, bez skomplikowanych formularzy.",
-  keywords = "świadczenia publiczne, dotacje, asystent AI, pomoc obywatelska, wnioski urzędowe, dokumenty urzędowe",
+  title = "Pomocnik Obywatela - Wszystkie świadczenia publiczne w jednym miejscu",
+  description = "Inteligentny asystent, który w sekundach znajdzie świadczenia, dotacje i dokumenty urzędowe. Bez biurokracji, bez skomplikowanych formularzy.",
+  keywords = "świadczenia publiczne, dotacje, pomoc obywatelska, wnioski urzędowe, dokumenty urzędowe, inteligentny asystent",
   ogImage = "https://pomocnikobywatela.pl/logo.png",
   canonicalUrl = "https://pomocnikobywatela.pl/",
   structuredData = null

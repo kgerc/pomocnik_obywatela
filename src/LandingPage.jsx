@@ -211,8 +211,8 @@ const LandingPage = () => {
   const features = [
     {
       icon: <MessageSquare size={32} />,
-      title: 'AI Chat - Inteligentny Asystent',
-      description: 'Zapytaj o dowolne świadczenie w naturalnym języku. AI natychmiast znajdzie odpowiedź i pokaże Ci dostępne opcje.',
+      title: 'Inteligentne Wyszukiwanie',
+      description: 'Zapytaj o dowolne świadczenie w naturalnym języku. Natychmiast znajdziesz odpowiedź i dostępne opcje.',
       benefits: ['Odpowiedzi w sekundach', 'Zrozumiałe wyjaśnienia', 'Dokładne dopasowanie do Twojej sytuacji'],
       color: '#2c5aa0'
     },
@@ -220,7 +220,7 @@ const LandingPage = () => {
       icon: <FileText size={32} />,
       title: 'Baza Pism i Wniosków',
       description: 'Gotowe wzory dokumentów do pobrania. Reklamacje, odwołania, wnioski - wszystko w jednym miejscu.',
-      benefits: ['Wyszukiwanie pism za pomocą AI', 'Gotowe wzory do pobrania (PDF/DOC)', 'Aktualne dokumenty zgodne z przepisami'],
+      benefits: ['Inteligentne wyszukiwanie pism', 'Gotowe wzory do pobrania (PDF/DOC)', 'Aktualne dokumenty zgodne z przepisami'],
       color: '#10b981'
     },
     {
@@ -241,8 +241,8 @@ const LandingPage = () => {
     },
     {
       step: '2',
-      title: 'AI analizuje',
-      description: 'Nasz inteligentny asystent przeszukuje bazę i znajduje najlepsze dopasowanie.',
+      title: 'Analiza',
+      description: 'System przeszukuje bazę i znajduje najlepsze dopasowanie do Twojej sytuacji.',
       icon: <Sparkles size={32} />
     },
     {
@@ -263,8 +263,8 @@ const LandingPage = () => {
       a: 'Regularnie aktualizujemy bazę danych, śledząc zmiany w przepisach.'
     },
     {
-      q: 'Czy mogę zaufać informacjom od AI?',
-      a: 'AI korzysta wyłącznie z oficjalnych źródeł (gov.pl, ZUS, PARP, itd.). Zawsze linkujemy do źródeł, abyś mógł zweryfikować informacje.'
+      q: 'Czy mogę zaufać informacjom?',
+      a: 'Korzystamy wyłącznie z oficjalnych źródeł (gov.pl, ZUS, PARP, itd.). Zawsze linkujemy do źródeł, abyś mógł zweryfikować informacje.'
     },
     {
       q: 'Czy moje dane są bezpieczne?',
@@ -276,9 +276,9 @@ const LandingPage = () => {
     <>
       {/* SEO Component */}
       <SEO
-        title="Pomocnik Obywatela - Świadczenia, Dotacje i Dokumenty | AI"
-        description="AI asystent znajdzie świadczenia, dotacje i dokumenty urzędowe w sekundach. 50+ świadczeń (800+, ZUS, MOPS), 150+ wzorów pism, 70+ dotacji. Bez biurokracji!"
-        keywords="świadczenia publiczne, dotacje, asystent AI, pomoc obywatelska, wnioski urzędowe, dokumenty urzędowe, ZUS, 800+, MOPS, ulga podatkowa, wsparcie rodzin, program dotacyjny, reklamacje, odwołania"
+        title="Pomocnik Obywatela - Świadczenia, Dotacje i Dokumenty"
+        description="Znajdź świadczenia, dotacje i dokumenty urzędowe w sekundach. 50+ świadczeń (800+, ZUS, MOPS), 150+ wzorów pism, 70+ dotacji. Bez biurokracji!"
+        keywords="świadczenia publiczne, dotacje, pomoc obywatelska, wnioski urzędowe, dokumenty urzędowe, ZUS, 800+, MOPS, ulga podatkowa, wsparcie rodzin, program dotacyjny, reklamacje, odwołania"
         ogImage="https://pomocnikobywatela.pl/logo.png"
         canonicalUrl="https://pomocnikobywatela.pl/"
       />
@@ -331,7 +331,7 @@ const LandingPage = () => {
           }} className="mobile-menu">
             <a href="#funkcje" onClick={() => trackEvent('click_nav_funkcje', { category: 'navigation', label: 'funkcje' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Funkcje</a>
             <a href="#screenshots" onClick={() => trackEvent('click_nav_screenshots', { category: 'navigation', label: 'screenshots' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Aplikacja</a>
-            <a href="https://pisma.pomocnikobywatela.pl" target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('click_nav_generator', { category: 'navigation', label: 'generator' })} style={{ color: '#10b981', textDecoration: 'none', fontWeight: '600' }}>Generator AI</a>
+            <a href="https://pisma.pomocnikobywatela.pl" target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('click_nav_generator', { category: 'navigation', label: 'generator' })} style={{ color: '#10b981', textDecoration: 'none', fontWeight: '600' }}>Generator Pism</a>
             <a href="#jak-dziala" onClick={() => trackEvent('click_nav_jakdziala', { category: 'navigation', label: 'jak_dziala' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>Jak działa</a>
             <a href="#faq" onClick={() => trackEvent('click_nav_faq', { category: 'navigation', label: 'faq' })} style={{ color: '#2c3e50', textDecoration: 'none', fontWeight: '600' }}>FAQ</a>
           </div>
@@ -358,7 +358,7 @@ const LandingPage = () => {
             marginBottom: '25px',
             border: '2px solid #2c5aa0'
           }}>
-            🚀 Asystent AI dla Obywateli
+            🚀 Inteligentny Asystent dla Obywateli
           </div>
           
           <h1 style={{
@@ -460,7 +460,7 @@ const LandingPage = () => {
               }}
             >
               <FileText size={24} />
-              Generator Pism AI
+              Generator Pism
             </a>
           </div>
 
@@ -740,7 +740,7 @@ const LandingPage = () => {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                Generuj Pismo AI <ArrowRight size={18} />
+                Generuj Pismo <ArrowRight size={18} />
               </a>
             )}
           </div>
@@ -1031,7 +1031,7 @@ const LandingPage = () => {
               onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
               onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
             >
-              Generatora Pism AI
+              Generatora Pism
             </a>
             {' '}(bez rejestracji)
           </p>
@@ -1069,7 +1069,7 @@ const LandingPage = () => {
             }}>
               <a href="#funkcje" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Funkcje</a>
               <a href="#screenshots" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Aplikacja</a>
-              <a href="https://pisma.pomocnikobywatela.pl" target="_blank" rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Generator Pism AI</a>
+              <a href="https://pisma.pomocnikobywatela.pl" target="_blank" rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Generator Pism</a>
               <a href="#jak-dziala" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>Jak działa</a>
               <a href="#faq" style={{ color: 'white', textDecoration: 'none', opacity: 0.8 }}>FAQ</a>
               <a href="#" onClick={(e) => { e.preventDefault(); setShowPrivacyPolicy(true); }} style={{ color: 'white', textDecoration: 'none', opacity: 0.8, transition: 'background 0.3s' }}>Polityka prywatności</a>
