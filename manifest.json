@@ -3,7 +3,7 @@
   "short_name": "Pomocnik Obywatela",
   "description": "Inteligentny asystent do wyszukiwania świadczeń publicznych, dotacji i dokumentów urzędowych",
   "start_url": "/",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#2c5aa0",
   "orientation": "portrait-primary",
